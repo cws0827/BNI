@@ -213,3 +213,57 @@ test('正式名單：46 人、9 組，綽號對得上海報上的人', () => {
   assert.deepEqual(r.chains, [['黃裕達', '陳韋翔', '許志安']]);
   assert.deepEqual(r.warnings, []);
 });
+
+test('一鍵部署檔和原始碼同步（沒同步請執行 node tools/build-gs.js）', () => {
+  const fs = require('fs');
+  const { build, OUT } = require('../tools/build-gs.js');
+  assert.equal(fs.readFileSync(OUT, 'utf8'), build());
+});
+
+test('一鍵部署檔在 Apps Script 環境能載入，setup 會寫入 46 位會員', () => {
+  const fs = require('fs');
+  const vm = require('vm');
+  const { OUT } = require('../tools/build-gs.js');
+  // 模擬試算表
+  const sheets = {};
+  function mkSheet(name) {
+    const rows = [];
+    const sh = {
+      name, rows,
+      getLastRow: () => rows.length,
+      getRange: (r, c, nr, nc) => ({
+        setValues(v) { v.forEach((row, i) => { rows[r - 1 + i] = row.slice(); }); return this; },
+        getValues() { return rows.slice(r - 1, r - 1 + nr).map(x => x.slice(c - 1, c - 1 + nc)); },
+        setValue(v) { rows[r - 1][c - 1] = v; },
+        setFontWeight() { return this; }, setBackground() { return this; }, setFontColor() { return this; }
+      }),
+      setFrozenRows() {}
+    };
+    sheets[name] = sh; return sh;
+  }
+  const ss = { getSheetByName: n => sheets[n] || null, insertSheet: mkSheet, getSheets: () => Object.values(sheets), deleteSheet() {} };
+  const out = [];
+  const ctx = {
+    SpreadsheetApp: { getActiveSpreadsheet: () => ss },
+    ContentService: { MimeType: { JSON: 'json' }, createTextOutput: s => { out.push(s); return { setMimeType() { return this; } }; } },
+    LockService: { getScriptLock: () => ({ waitLock() {}, releaseLock() {} }) },
+    Math, JSON, Date, String, Object, Array, RegExp, parseInt, isNaN, Infinity
+  };
+  vm.createContext(ctx);
+  vm.runInContext(fs.readFileSync(OUT, 'utf8'), ctx);
+  ctx.setup();
+  assert.equal(sheets['會員名單'].rows.length, 47);
+  const code = sheets['協調員'].rows[1][1];
+  // 登入、送出、讀排行榜，走一遍完整流程
+  ctx.doPost({ postData: { contents: JSON.stringify({ action: 'login', code }) } });
+  assert.equal(JSON.parse(out.pop()).ok, true);
+  const items = ctx.BNICore.parseText('姓名：達哥\n外部引薦：1件\n成交：1件', { members: ctx.BNICore.rosterMembers(), week: '11/9-13' });
+  ctx.doPost({ postData: { contents: JSON.stringify({ action: 'submit', code, items }) } });
+  assert.equal(JSON.parse(out.pop()).results[0].ok, true);
+  ctx.doGet({ parameter: { action: 'leaderboard' } });
+  const lb = JSON.parse(out.pop());
+  assert.equal(lb.individuals[0].name, '黃裕達');
+  assert.equal(lb.individuals[0].total, 6);
+  ctx.doPost({ postData: { contents: JSON.stringify({ action: 'login', code: 'wrong' }) } });
+  assert.equal(JSON.parse(out.pop()).ok, false);
+});

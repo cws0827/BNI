@@ -22,7 +22,8 @@ index.html（活動頁）◄── 排行榜（只有分數，不含原始訊息
 | `index.html` | 公開活動頁與即時排行榜（網址加 `?demo=1` 可看示範資料） |
 | `report.html` | 協調員回報台（貼上回報、本週總覽、訊息範本） |
 | `archive/` | 往期活動頁 |
-| `apps-script/Code.gs` | Apps Script 後端 |
+| `apps-script/Code.gs` | Apps Script 後端原始碼 |
+| `apps-script/all-in-one.gs` | **部署用**：核心＋後端合成一份，貼這個就好（由 `tools/build-gs.js` 產生） |
 | `tests/core.test.js` | 單元測試：`node --test tests/core.test.js` |
 
 ## 計分（`js/bni-core.js` 的 `POINTS`）
@@ -40,9 +41,7 @@ index.html（活動頁）◄── 排行榜（只有分數，不含原始訊息
 
 1. **建立試算表**：到 Google 雲端硬碟新增一份試算表，例如命名「大信鍊金術師積分」。
 2. **開啟 Apps Script**：在試算表裡選「擴充功能 → Apps Script」。
-3. **貼上兩個檔案**：
-   - 把預設的 `程式碼.gs` 內容整份換成 `apps-script/Code.gs`。
-   - 按「＋ → 指令碼」新增一個檔案，命名為 `bni-core`，把 `js/bni-core.js` 整份貼上。
+3. **貼上程式（只要一個檔案）**：打開 GitHub 上的 `apps-script/all-in-one.gs`，按右上角的「Copy raw file」複製整份，貼進 Apps Script 的 `程式碼.gs`，**取代**原本的內容，然後按儲存（💾）。
 4. **初始化**：在上方的函式選單選 `setup`，按「執行」。第一次會要求授權，選你的帳號，再按「進階 → 前往（不安全）→ 允許」。這是你自己寫的程式，所以 Google 會這樣提示。
    - 執行完試算表會多出五張工作表。「協調員」表裡已經產生三組 6 位數通行碼，分別給兩位協調員和你自己。
 5. **核對會員名單**：`setup` 會自動寫入九組 46 位會員、組長／培訓長，以及別名。別名包含去掉姓的名字，例如「陳韋翔」的別名是「韋翔」，還有「達哥」＝黃裕達、「小姜」＝姜則旭、「Mia」＝黃氏英。如果會員有其他常用綽號，加在「別名」欄，多個用逗號隔開。
@@ -53,7 +52,7 @@ index.html（活動頁）◄── 排行榜（只有分數，不含原始訊息
 7. **接上網頁**：把網址貼進 `js/config.js` 的 `API_URL`，commit 並 push。
 8. 把 `report.html` 的網址和各自的通行碼私訊給兩位協調員。
 
-> 之後如果改了 `Code.gs` 或 `bni-core`，要用「部署 → 管理部署作業 → 編輯 → 版本：新版本」重新部署，網址不會變。
+> 之後程式有更新，先執行 `node tools/build-gs.js` 重新產生 `all-in-one.gs`，再把新內容貼回 Apps Script，然後用「部署 → 管理部署作業 → 編輯 → 版本：新版本」重新部署，網址不會變。
 
 ## 協調員每週流程
 
