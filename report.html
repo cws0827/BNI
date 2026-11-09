@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark only">
+<meta name="robots" content="noindex">
+<title>協調員回報台｜大信鍊金術師</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#07080F; --ink2:#0D0F1C; --card:#121527; --card2:#181C33; --line:rgba(227,184,76,.24);
+  --gold1:#FBE9A8; --gold2:#E3B84C; --gold3:#A9761D;
+  --paper:#EDE7DC; --muted:#9A94A8; --warn:#F2B35B; --bad:#F06A6A; --ok:#7FD6A4;
+  --han:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  --disp:"Cinzel","Noto Sans TC",serif;
+}
+*{box-sizing:border-box}
+html{background:var(--ink);color-scheme:dark}
+body{margin:0;min-height:100vh;color:var(--paper);font-family:var(--han);line-height:1.6;-webkit-font-smoothing:antialiased;
+  background:radial-gradient(110% 60% at 80% -10%,rgba(227,184,76,.13),transparent 60%),radial-gradient(80% 50% at 0% 100%,rgba(80,90,200,.12),transparent 60%),var(--ink);background-attachment:fixed}
+.wrap{max-width:920px;margin:0 auto;padding:0 16px}
+.goldtext{background:linear-gradient(178deg,#FFF6D6 5%,var(--gold1) 30%,var(--gold2) 55%,#8A5F16 80%,var(--gold2));-webkit-background-clip:text;background-clip:text;color:transparent}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:5;background:rgba(7,8,15,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:12px;min-height:58px}
+.brand{display:flex;flex-direction:column;line-height:1.15;margin-right:auto}
+.brand b{font-weight:900;font-size:1.05rem;letter-spacing:.04em}
+.brand small{font-family:var(--disp);font-size:.62rem;letter-spacing:.24em;color:var(--gold3)}
+.who{font-size:.82rem;color:var(--muted);text-align:right;line-height:1.3;white-space:nowrap}
+.who b{color:var(--gold1);font-weight:700}
+.linkbtn{background:none;border:0;color:var(--gold2);font-size:.8rem;padding:4px 0;text-decoration:underline;text-underline-offset:3px}
+
+.demo{margin:14px 0 0;padding:10px 14px;border:1px dashed var(--warn);border-radius:10px;color:var(--warn);font-size:.86rem;background:rgba(242,179,91,.06)}
+
+/* tabs */
+.tabs{display:flex;gap:6px;margin:18px 0 6px;overflow-x:auto;scrollbar-width:none}
+.tabs button{flex:1 0 auto;padding:10px 16px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);font-weight:700;font-size:.92rem;white-space:nowrap}
+.tabs button[aria-selected="true"]{background:linear-gradient(180deg,var(--gold1),var(--gold2));color:#1b1405;border-color:transparent}
+.panel{padding:12px 0 60px}
+.panel[hidden]{display:none}
+
+/* common */
+h2{font-size:1.25rem;margin:10px 0 4px;font-weight:900}
+.lede{color:var(--muted);font-size:.88rem;margin:0 0 14px}
+.box{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:16px;padding:16px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:.78rem;color:var(--muted);font-weight:500}
+input[type=text],input[type=password],input[type=number],select,textarea{
+  background:#0A0C18;border:1px solid rgba(227,184,76,.28);border-radius:10px;padding:9px 11px;font-size:1rem;width:100%;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--gold2);box-shadow:0 0 0 3px rgba(227,184,76,.15)}
+textarea{resize:vertical;line-height:1.55}
+select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--gold2) 50%),linear-gradient(135deg,var(--gold2) 50%,transparent 50%);background-position:calc(100% - 16px) 55%,calc(100% - 11px) 55%;background-size:5px 5px;background-repeat:no-repeat;padding-right:30px}
+.btn{border:0;border-radius:12px;padding:11px 18px;font-weight:900;letter-spacing:.04em;background:linear-gradient(180deg,var(--gold1),var(--gold2) 55%,var(--gold3));color:#1b1405;box-shadow:0 6px 18px rgba(227,184,76,.18)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--gold1);border:1px solid var(--line);box-shadow:none}
+.btn.sm{padding:6px 12px;font-size:.82rem;border-radius:9px}
+.muted{color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(30px);opacity:0;transition:.25s;background:#1d2140;border:1px solid var(--gold2);color:var(--gold1);padding:10px 18px;border-radius:999px;font-size:.9rem;z-index:20;pointer-events:none;max-width:calc(100% - 32px)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* login */
+.login{max-width:420px;margin:40px auto;text-align:center}
+.login h1{font-size:1.6rem;margin:6px 0 2px;font-weight:900}
+.login p{color:var(--muted);font-size:.9rem}
+.login form{display:flex;gap:8px;margin-top:18px}
+.login .err{color:var(--bad);font-size:.86rem;min-height:1.4em;margin-top:8px}
+
+/* paste */
+.pastebar{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:10px}
+.pastebar label.f{min-width:150px}
+#paste{min-height:190px}
+.actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+
+/* parsed cards */
+.cards{display:flex;flex-direction:column;gap:12px;margin-top:18px}
+.card{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:16px;padding:14px;position:relative}
+.card.off{opacity:.45}
+.card.has-warn{border-color:rgba(242,179,91,.55)}
+.card-h{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.tag{font-size:.72rem;font-weight:900;letter-spacing:.06em;padding:3px 9px;border-radius:999px;background:rgba(227,184,76,.14);color:var(--gold1);border:1px solid var(--line)}
+.tag.story{background:rgba(140,120,255,.16);color:#CFC6FF;border-color:rgba(140,120,255,.4)}
+.pick{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--muted);margin-left:auto}
+.pick input{width:18px;height:18px;accent-color:var(--gold2)}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:8px}
+@media (max-width:560px){.grid4{grid-template-columns:repeat(2,1fr)}.grid3,.grid2{grid-template-columns:1fr}}
+.sum{display:flex;align-items:baseline;gap:10px;margin-top:10px;flex-wrap:wrap}
+.sum .big{font-size:1.6rem;font-weight:900;line-height:1}
+.sum .self{font-size:.82rem;color:var(--muted)}
+.warn{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:4px}
+.warn li{font-size:.84rem;color:var(--warn);padding-left:18px;position:relative}
+.warn li::before{content:"!";position:absolute;left:0;top:2px;width:13px;height:13px;border-radius:50%;background:var(--warn);color:#1b1405;font-size:.66rem;font-weight:900;display:grid;place-items:center;line-height:1}
+.warn li.info{color:var(--muted)}
+.warn li.info::before{background:var(--muted);content:"i"}
+.result{margin-top:10px;font-size:.86rem;font-weight:700}
+.result.ok{color:var(--ok)}.result.bad{color:var(--bad)}
+details{margin-top:10px}
+summary{cursor:pointer;color:var(--muted);font-size:.8rem}
+pre{white-space:pre-wrap;word-break:break-word;background:#0A0C18;border-radius:10px;padding:10px;font-family:inherit;font-size:.82rem;color:#C9C3D6;margin:6px 0 0;max-height:260px;overflow:auto}
+.submitbar{position:sticky;bottom:12px;margin-top:16px;display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:rgba(18,21,39,.95);border:1px solid var(--gold3);backdrop-filter:blur(8px)}
+.submitbar span{font-size:.88rem;color:var(--muted);margin-right:auto}
+
+/* overview */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}
+.stat b{display:block;font-size:1.5rem;font-weight:900;line-height:1.2}
+.stat small{color:var(--muted);font-size:.76rem}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th,td{padding:9px 6px;text-align:center;border-bottom:1px solid rgba(227,184,76,.1);white-space:nowrap}
+th{font-size:.74rem;color:var(--gold2);font-weight:700;background:rgba(227,184,76,.06)}
+td.l,th.l{text-align:left}
+td .w{color:var(--warn);font-size:.74rem;display:block;white-space:normal;max-width:240px;line-height:1.4;margin-top:2px}
+td .by{color:var(--muted);font-size:.72rem;display:block}
+td.l{white-space:normal}
+tr:last-child td{border-bottom:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;padding:3px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.sub{margin-top:22px}
+.sub h3{font-size:.95rem;margin:0 0 8px;color:var(--gold1)}
+.notes{margin:0;padding-left:18px;color:var(--warn);font-size:.86rem}
+.notes li{margin:3px 0}
+.story-li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;font-size:.86rem}
+.story-li .h{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.story-li .h b{color:var(--gold1)}
+.story-li .h .btn{margin-left:auto}
+.empty{color:var(--muted);font-size:.88rem;padding:14px;text-align:center}
+
+/* templates */
+.tpl{margin-bottom:18px}
+.tpl .row{justify-content:space-between;margin-bottom:6px}
+.tpl h3{margin:0;font-size:1rem}
+.tpl pre{max-height:none;font-size:.9rem;color:var(--paper);border:1px solid var(--line)}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><b class="goldtext">大信鍊金術師｜回報台</b><small>Golden Matrix · Coordinator</small></div>
+    <div class="who" id="who" hidden><b id="whoName"></b><br><button class="linkbtn" id="logout" type="button">登出</button></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="demo" id="demoNote" hidden>⚠️ 示範模式：後端還沒接上，資料只存在這台裝置的瀏覽器，換手機或清除瀏覽資料就會不見。任何通行碼都能登入。</div>
+
+  <!-- 登入 -->
+  <section class="login" id="loginView" hidden>
+    <p class="goldtext" style="font-family:var(--disp);letter-spacing:.3em;font-size:.78rem">COORDINATOR ACCESS</p>
+    <h1>協調員登入</h1>
+    <p>輸入你的通行碼。</p>
+    <form id="loginForm" autocomplete="off">
+      <input type="password" id="code" inputmode="numeric" placeholder="通行碼" aria-label="通行碼" required>
+      <button class="btn" type="submit">進入</button>
+    </form>
+    <div class="err" id="loginErr"></div>
+  </section>
+
+  <!-- 主畫面 -->
+  <div id="app" hidden>
+    <nav class="tabs" role="tablist">
+      <button role="tab" aria-selected="true" data-tab="paste">① 貼上回報</button>
+      <button role="tab" aria-selected="false" data-tab="overview">② 本週總覽</button>
+      <button role="tab" aria-selected="false" data-tab="templates">③ 訊息範本</button>
+    </nav>
+
+    <!-- ① 貼上回報 -->
+    <section class="panel" id="tab-paste">
+      <h2>貼上會員的回報</h2>
+      <p class="lede">直接從 LINE 複製貼上，可以一次貼很多人，週回報和引薦故事混在一起也可以。解析完先檢查黃色提醒，有錯直接改，確認後再送出。</p>
+      <div class="box">
+        <div class="pastebar">
+          <label class="f">預設週次（訊息沒寫週次時用）<select id="pasteWeek"></select></label>
+        </div>
+        <textarea id="paste" placeholder="把會員回覆的【大信鍊金術師｜積分回報】或引薦故事貼在這裡…"></textarea>
+        <div class="actions">
+          <button class="btn" type="button" id="parseBtn">解析</button>
+          <button class="btn ghost" type="button" id="clearBtn">清除</button>
+        </div>
+      </div>
+      <div class="cards" id="cards"></div>
+      <div class="submitbar" id="submitBar" hidden>
+        <span id="submitInfo"></span>
+        <button class="btn" type="button" id="submitBtn">送出</button>
+      </div>
+    </section>
+
+    <!-- ② 本週總覽 -->
+    <section class="panel" id="tab-overview" hidden>
+      <h2>本週總覽與檢核</h2>
+      <p class="lede">已經存進系統的資料。同一個人同一週重報，新的會自動取代舊的。打錯的話可以撤銷。</p>
+      <div class="row">
+        <label class="f" style="min-width:160px">週次<select id="ovWeek"></select></label>
+        <button class="btn ghost sm" type="button" id="ovReload" style="align-self:flex-end">重新整理</button>
+      </div>
+      <div id="ovBody"><div class="empty">載入中…</div></div>
+    </section>
+
+    <!-- ③ 訊息範本 -->
+    <section class="panel" id="tab-templates" hidden>
+      <h2>發到大群的訊息</h2>
+      <p class="lede">一鍵複製，貼到 LINE 商務大群。</p>
+      <div class="row" style="margin-bottom:14px"><label class="f" style="min-width:160px">週次<select id="tplWeek"></select></label></div>
+      <div class="tpl">
+        <div class="row"><h3>每週積分回報範本</h3><button class="btn sm" type="button" data-copy="tplWeekly">複製</button></div>
+        <pre id="tplWeekly"></pre>
+      </div>
+      <div class="tpl">
+        <div class="row"><h3>引薦故事格式</h3><button class="btn sm" type="button" data-copy="tplStory">複製</button></div>
+        <pre id="tplStory"></pre>
+      </div>
+      <div class="tpl">
+        <div class="row"><h3>戰況速報（累計排行）</h3><button class="btn sm" type="button" data-copy="tplBattle">複製</button></div>
+        <pre id="tplBattle">載入中…</pre>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<datalist id="memlist"></datalist>
+
+<script src="js/config.js"></script>
+<script src="js/bni-core.js"></script>
+<script>
+(function () {
+  'use strict';
+  var C = window.BNICore;
+  var API_URL = (window.BNI_CONFIG && window.BNI_CONFIG.API_URL || '').trim();
+  var DEMO = !API_URL;
+  var SKEY = 'bni-alchemist-code';
+  var state = { code: '', name: '', role: '', members: [], items: [] };
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function store(k, v) { try { if (v == null) sessionStorage.removeItem(k); else sessionStorage.setItem(k, v); } catch (e) {} }
+  function load(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
+  var toastTimer;
+  function toast(msg) { var t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.remove('show'); }, 2400); }
+
+  /* ── API：正式後端 / 示範模式 ─────────────────────────── */
+  var DEMO_MEMBERS = C.rosterMembers();
+  var DKEY = 'bni-alchemist-demo';
+  function demoLoad() { try { return JSON.parse(localStorage.getItem(DKEY)) || { weekly: [], stories: [] }; } catch (e) { return { weekly: [], stories: [] }; } }
+  function demoSave(s) { try { localStorage.setItem(DKEY, JSON.stringify(s)); } catch (e) {} }
+  function demoCall(action, p) {
+    var s = demoLoad();
+    if (action === 'login') return { ok: true, name: '示範協調員', role: '管理員', members: DEMO_MEMBERS };
+    if (action === 'submit') {
+      var plan = C.planSubmission(s, p.items, { reporter: state.name, now: new Date(), members: DEMO_MEMBERS });
+      s.weekly.forEach(function (r) { if (plan.supersede.indexOf(r.id) >= 0) r.status = C.STATUS.superseded; });
+      s.weekly = s.weekly.concat(plan.weeklyAppend); s.stories = s.stories.concat(plan.storyAppend);
+      demoSave(s); return { ok: true, results: plan.results };
+    }
+    if (action === 'week') { var chk = C.weekCheck(p.week, s.weekly, s.stories, DEMO_MEMBERS); chk.ok = true; return chk; }
+    if (action === 'void') {
+      s.weekly.concat(s.stories).forEach(function (r) { if (r.id === p.id) r.status = C.STATUS.voided; });
+      demoSave(s); return { ok: true };
+    }
+    if (action === 'leaderboard') { var lb = C.leaderboard(s.weekly, DEMO_MEMBERS); lb.ok = true; return lb; }
+    return { ok: false, error: '未知的動作' };
+  }
+  function api(action, payload) {
+    payload = payload || {};
+    if (DEMO) return new Promise(function (res) { setTimeout(function () { res(demoCall(action, payload)); }, 150); });
+    var body = JSON.stringify(Object.assign({ action: action, code: state.code }, payload));
+    return fetch(API_URL, { method: 'POST', body: body }).then(function (r) { return r.json(); })
+      .catch(function () { return { ok: false, error: '連不上後端，請檢查網路' }; });
+  }
+
+  /* ── 登入 ─────────────────────────────────────────── */
+  function showLogin() { $('loginView').hidden = false; $('app').hidden = true; $('who').hidden = true; }
+  function enter(res) {
+    state.name = res.name; state.role = res.role; state.members = res.members || [];
+    $('memlist').innerHTML = state.members.map(function (m) { return '<option value="' + esc(m.name) + '">'; }).join('');
+    $('whoName').textContent = res.name;
+    $('loginView').hidden = true; $('app').hidden = false; $('who').hidden = false;
+  }
+  function tryLogin(code, silent) {
+    state.code = code;
+    return api('login').then(function (res) {
+      if (!res.ok) { store(SKEY, null); if (!silent) $('loginErr').textContent = res.error || '登入失敗'; showLogin(); return; }
+      store(SKEY, code); enter(res);
+    });
+  }
+  $('loginForm').addEventListener('submit', function (e) {
+    e.preventDefault(); $('loginErr').textContent = '';
+    tryLogin($('code').value.trim());
+  });
+  $('logout').addEventListener('click', function () { store(SKEY, null); state.code = ''; $('code').value = ''; showLogin(); });
+
+  /* ── 週次選單 ─────────────────────────────────────── */
+  var thisWeek = C.weekOfDate(new Date());
+  ['pasteWeek', 'ovWeek', 'tplWeek'].forEach(function (id) {
+    $(id).innerHTML = C.WEEKS.map(function (w) {
+      return '<option value="' + w.label + '"' + (w.label === thisWeek ? ' selected' : '') + '>' + w.label + (w.label === thisWeek ? '（本週）' : '') + '</option>';
+    }).join('');
+  });
+  function weekOptions(sel) {
+    return C.WEEKS.map(function (w) { return '<option value="' + w.label + '"' + (w.label === sel ? ' selected' : '') + '>' + w.label + '</option>'; }).join('');
+  }
+
+  /* ── 分頁 ─────────────────────────────────────────── */
+  document.querySelectorAll('.tabs button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('.tabs button').forEach(function (x) { x.setAttribute('aria-selected', String(x === b)); });
+      ['paste', 'overview', 'templates'].forEach(function (t) { $('tab-' + t).hidden = t !== b.dataset.tab; });
+      if (b.dataset.tab === 'overview') loadOverview();
+      if (b.dataset.tab === 'templates') renderTemplates();
+    });
+  });
+
+  /* ── ① 解析 ───────────────────────────────────────── */
+  $('parseBtn').addEventListener('click', function () {
+    var text = $('paste').value;
+    if (!text.trim()) { $('paste').focus(); return; }
+    state.items = C.parseText(text, { members: state.members, week: $('pasteWeek').value }).map(function (it) { it._on = true; return it; });
+    renderCards();
+    if (!state.items.length) toast('沒有解析到任何回報，請確認貼上的內容');
+    else $('cards').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  $('clearBtn').addEventListener('click', function () { $('paste').value = ''; state.items = []; renderCards(); });
+
+  function numField(i, key, label, val) {
+    return '<label class="f">' + label + '<input type="number" min="0" max="99" inputmode="numeric" data-i="' + i + '" data-k="' + key + '" value="' + (val == null ? '' : val) + '" placeholder="未填"></label>';
+  }
+
+  function cardHTML(it, i) {
+    var h = '<article class="card' + (it._on ? '' : ' off') + '" id="card' + i + '">';
+    h += '<div class="card-h"><span class="tag' + (it.type === 'story' ? ' story' : '') + '">' + (it.type === 'story' ? '引薦故事' : '週回報') + '</span>';
+    h += '<select data-i="' + i + '" data-k="week" aria-label="週次" style="width:auto">' + weekOptions(it.week) + '</select>';
+    h += '<label class="pick"><input type="checkbox" data-i="' + i + '" data-k="_on"' + (it._on ? ' checked' : '') + '>送出</label></div>';
+    if (it.type === 'weekly') {
+      h += '<div class="grid2" style="margin-bottom:8px"><label class="f">姓名<input type="text" list="memlist" data-i="' + i + '" data-k="rawName" value="' + esc(it.name || it.rawName) + '"></label>';
+      h += '<label class="f">自報合計（分）<input type="number" data-i="' + i + '" data-k="selfTotal" value="' + (it.selfTotal == null ? '' : it.selfTotal) + '" placeholder="沒寫"></label></div>';
+      h += '<div class="grid4">' + C.FIELDS.map(function (f) { return numField(i, f.key, f.label + '（' + f.unit + '）', it.counts[f.key]); }).join('') + '</div>';
+      h += '<label class="f" style="margin-top:8px">服務鏈名單（一行一條，用 → 隔開）<textarea rows="2" data-i="' + i + '" data-k="chains" placeholder="達哥 → 韋翔 → 志安">' + esc(it.chains.map(function (c) { return c.join(' → '); }).join('\n')) + '</textarea></label>';
+      h += '<div class="sum"><span class="muted" style="font-size:.82rem">系統計算</span><b class="big goldtext" id="tot' + i + '">' + it.total + '</b><span class="muted">分</span><span class="self" id="self' + i + '"></span></div>';
+    } else {
+      h += '<div class="grid3"><label class="f">引薦人<input type="text" list="memlist" data-i="' + i + '" data-k="referrer" value="' + esc(it.referrer) + '"></label>';
+      h += '<label class="f">被引薦<input type="text" list="memlist" data-i="' + i + '" data-k="referee" value="' + esc(it.referee) + '"></label>';
+      h += '<label class="f">合作會員（用、隔開）<input type="text" data-i="' + i + '" data-k="collaborators" value="' + esc(it.collaborators.join('、')) + '"></label></div>';
+      h += '<div class="sum"><span class="muted" style="font-size:.82rem">參與會員各 +' + C.POINTS.story + ' 分：</span><b id="parts' + i + '">' + esc(it.participants.join('、')) + '</b></div>';
+      h += '<details><summary>故事內容</summary><pre>' + esc('引薦情境／客戶需求：' + (it.scenario || '') + '\n如何對接：' + (it.docking || '') + '\n最後結果：' + (it.result || '')) + '</pre></details>';
+    }
+    h += '<ul class="warn" id="warn' + i + '"></ul><div class="result" id="res' + i + '"></div>';
+    h += '<details><summary>原始訊息</summary><pre>' + esc(it.raw) + '</pre></details></article>';
+    return h;
+  }
+
+  function renderCards() {
+    $('cards').innerHTML = state.items.map(cardHTML).join('');
+    state.items.forEach(function (_, i) { refreshCard(i); });
+    updateSubmitBar();
+  }
+
+  function refreshCard(i) {
+    var it = state.items[i];
+    var warns = (it.parseNotes || []).map(function (n) { return '<li class="info">' + esc(n) + '</li>'; })
+      .concat(it.warnings.map(function (w) { return '<li>' + esc(w) + '</li>'; }));
+    $('warn' + i).innerHTML = warns.join('');
+    $('card' + i).classList.toggle('has-warn', it.warnings.length > 0);
+    $('card' + i).classList.toggle('off', !it._on);
+    if (it.type === 'weekly') {
+      $('tot' + i).textContent = it.total;
+      $('self' + i).textContent = it.selfTotal == null ? '' : '（自報 ' + it.selfTotal + ' 分）';
+    } else {
+      $('parts' + i).textContent = it.participants.join('、');
+    }
+  }
+
+  $('cards').addEventListener('input', onEdit);
+  $('cards').addEventListener('change', onEdit);
+  function onEdit(e) {
+    var el = e.target, i = el.dataset.i, k = el.dataset.k;
+    if (i == null || !k) return;
+    var it = state.items[+i];
+    if (k === '_on') it._on = el.checked;
+    else if (k === 'week') it.week = el.value;
+    else if (k === 'rawName') { it.rawName = el.value; }
+    else if (k === 'selfTotal') it.selfTotal = el.value === '' ? null : parseInt(el.value, 10);
+    else if (k === 'chains') it.chains = el.value.split('\n').map(function (l) { return C.normalize(l).split('→').map(function (s) { return s.trim(); }).filter(Boolean); }).filter(function (c) { return c.length; });
+    else if (k === 'referrer' || k === 'referee') it[k] = el.value;
+    else if (k === 'collaborators') it.collaborators = el.value.split(/[、,，\s]+/).filter(Boolean);
+    else if (it.counts && k in it.counts) it.counts[k] = el.value === '' ? null : parseInt(el.value, 10);
+    if (it.type === 'weekly') C.prepareWeekly(it, state.members); else C.prepareStory(it, state.members);
+    $('res' + i).textContent = ''; $('res' + i).className = 'result';
+    refreshCard(+i); updateSubmitBar();
+  }
+
+  function updateSubmitBar() {
+    var on = state.items.filter(function (it) { return it._on && !it._saved; });
+    var warn = on.filter(function (it) { return it.warnings.length; }).length;
+    $('submitBar').hidden = !state.items.length;
+    $('submitInfo').textContent = '勾選 ' + on.length + ' 筆' + (warn ? '，其中 ' + warn + ' 筆有提醒' : '');
+    $('submitBtn').disabled = !on.length;
+    $('submitBtn').textContent = '送出 ' + on.length + ' 筆';
+  }
+
+  $('submitBtn').addEventListener('click', function () {
+    var idx = [], payload = [];
+    state.items.forEach(function (it, i) { if (it._on && !it._saved) { idx.push(i); payload.push(it); } });
+    if (!payload.length) return;
+    var warn = payload.filter(function (it) { return it.warnings.length; }).length;
+    if (warn && !confirm('有 ' + warn + ' 筆還有黃色提醒，確定要送出嗎？')) return;
+    var btn = $('submitBtn'); btn.disabled = true; btn.textContent = '送出中…';
+    api('submit', { items: payload }).then(function (res) {
+      if (!res.ok) { toast(res.error || '送出失敗'); updateSubmitBar(); return; }
+      var okN = 0;
+      res.results.forEach(function (r) {
+        var i = idx[r.index], el = $('res' + i);
+        el.textContent = (r.ok ? '✓ ' : '✕ ') + r.message;
+        el.className = 'result ' + (r.ok ? 'ok' : 'bad');
+        if (r.ok) { okN++; state.items[i]._saved = true; state.items[i]._on = false; $('card' + i).classList.add('off'); var cb = $('card' + i).querySelector('[data-k="_on"]'); cb.checked = false; cb.disabled = true; }
+      });
+      toast('成功 ' + okN + ' 筆' + (okN < payload.length ? '，' + (payload.length - okN) + ' 筆沒存進去，請看紅字' : ''));
+      updateSubmitBar();
+    });
+  });
+
+  /* ── ② 總覽 ───────────────────────────────────────── */
+  $('ovWeek').addEventListener('change', loadOverview);
+  $('ovReload').addEventListener('click', loadOverview);
+  function loadOverview() {
+    var week = $('ovWeek').value;
+    $('ovBody').innerHTML = '<div class="empty">載入中…</div>';
+    api('week', { week: week }).then(function (res) {
+      if (!res.ok) { $('ovBody').innerHTML = '<div class="empty">' + esc(res.error) + '</div>'; return; }
+      var total = res.reports.reduce(function (s, r) { return s + (parseInt(r.total, 10) || C.computeTotal(r)); }, 0);
+      var h = '<div class="stats"><div class="stat"><b class="goldtext">' + res.reports.length + '</b><small>已回報人數</small></div>';
+      h += '<div class="stat"><b class="goldtext">' + res.missing.length + '</b><small>尚未回報</small></div>';
+      h += '<div class="stat"><b class="goldtext">' + total + '</b><small>本週總積分</small></div></div>';
+      if (res.reports.length) {
+        h += '<div class="tbl-wrap"><table><thead><tr><th class="l">姓名</th><th>引薦</th><th>成交</th><th>故事</th><th>爆擊</th><th>合計</th><th></th></tr></thead><tbody>';
+        res.reports.slice().sort(function (a, b) { return (b.total || 0) - (a.total || 0); }).forEach(function (r) {
+          h += '<tr><td class="l"><b>' + esc(r.name) + '</b><span class="by">' + esc(r.reporter) + ' 回報</span>' + (r.warnings ? '<span class="w">' + esc(r.warnings) + '</span>' : '') + (r.chains ? '<span class="w" style="color:var(--gold2)">鏈：' + esc(r.chains) + '</span>' : '') + '</td>';
+          h += '<td>' + r.ref + '</td><td>' + r.close + '</td><td>' + r.story + '</td><td>' + r.chain + '</td><td><b class="goldtext">' + r.total + '</b></td>';
+          h += '<td><button class="btn ghost sm" type="button" data-void="' + esc(r.id) + '" data-label="' + esc(r.name + ' ' + r.week) + '">撤銷</button></td></tr>';
+        });
+        h += '</tbody></table></div>';
+      } else h += '<div class="empty">這週還沒有任何回報</div>';
+      if (res.notes.length) h += '<div class="sub"><h3>檢核提醒</h3><ul class="notes">' + res.notes.map(function (n) { return '<li>' + esc(n) + '</li>'; }).join('') + '</ul></div>';
+      if (res.missing.length) h += '<div class="sub"><h3>尚未回報（' + res.missing.length + '）</h3><div class="chips">' + res.missing.map(function (n) { return '<span class="chip">' + esc(n) + '</span>'; }).join('') + '</div></div>';
+      h += '<div class="sub"><h3>本週登記的引薦故事（' + res.stories.length + '）</h3>';
+      h += res.stories.length ? res.stories.map(function (s) {
+        return '<div class="story-li"><div class="h"><b>' + esc(s.referrer) + ' → ' + esc(s.referee) + '</b><span class="muted">參與：' + esc(s.participants) + '</span><button class="btn ghost sm" type="button" data-void="' + esc(s.id) + '" data-label="故事 ' + esc(s.referrer + '→' + s.referee) + '">撤銷</button></div><div class="muted" style="margin-top:4px">' + esc(s.result) + '</div></div>';
+      }).join('') : '<div class="empty">還沒有登記故事</div>';
+      h += '</div>';
+      $('ovBody').innerHTML = h;
+    });
+  }
+  $('ovBody').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-void]');
+    if (!b) return;
+    if (!confirm('確定撤銷「' + b.dataset.label + '」這筆紀錄？')) return;
+    api('void', { id: b.dataset.void }).then(function (res) { toast(res.ok ? '已撤銷' : (res.error || '撤銷失敗')); if (res.ok) loadOverview(); });
+  });
+
+  /* ── ③ 範本 ───────────────────────────────────────── */
+  $('tplWeek').addEventListener('change', renderTemplates);
+  function renderTemplates() {
+    var w = $('tplWeek').value;
+    $('tplWeekly').textContent = C.weeklyTemplate(w);
+    $('tplStory').textContent = C.storyTemplate();
+    $('tplBattle').textContent = '載入中…';
+    api('leaderboard').then(function (res) {
+      $('tplBattle').textContent = res.ok ? C.battleReport(w, res) : (res.error || '載入失敗');
+    });
+  }
+  document.querySelectorAll('[data-copy]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var text = $(b.dataset.copy).textContent;
+      (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(function () { toast('已複製，可以貼到 LINE 了'); })
+        .catch(function () {
+          var r = document.createRange(); r.selectNodeContents($(b.dataset.copy));
+          var s = getSelection(); s.removeAllRanges(); s.addRange(r); toast('請長按複製');
+        });
+    });
+  });
+
+  /* ── 啟動 ─────────────────────────────────────────── */
+  $('demoNote').hidden = !DEMO;
+  var saved = load(SKEY);
+  if (saved) tryLogin(saved, true); else showLogin();
+})();
+</script>
+</body>
+</html>
