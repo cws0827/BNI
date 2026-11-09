@@ -247,11 +247,7 @@ tr:last-child td{border-bottom:0}
   function toast(msg) { var t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.remove('show'); }, 2400); }
 
   /* ── API：正式後端 / 示範模式 ─────────────────────────── */
-  var DEMO_MEMBERS = [
-    { name: '達哥', aliases: [], group: 'A組' }, { name: '韋翔', aliases: [], group: 'A組' },
-    { name: '志安', aliases: [], group: 'B組' }, { name: '育文', aliases: [], group: 'B組' },
-    { name: '小美', aliases: [], group: 'C組' }
-  ];
+  var DEMO_MEMBERS = C.rosterMembers();
   var DKEY = 'bni-alchemist-demo';
   function demoLoad() { try { return JSON.parse(localStorage.getItem(DKEY)) || { weekly: [], stories: [] }; } catch (e) { return { weekly: [], stories: [] }; } }
   function demoSave(s) { try { localStorage.setItem(DKEY, JSON.stringify(s)); } catch (e) {} }

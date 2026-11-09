@@ -43,6 +43,32 @@
 
   var STATUS = { active: '有效', superseded: '已取代', voided: '已撤銷' };
 
+  /* ── 會員名單（試算表初始化與網頁預設都用這份；正式資料以試算表為準） ── */
+  var ROSTER = [
+    { group: '第一組', leader: '林佳欣', trainer: '陳崎豐', members: ['林佳欣', '陳建蒼', '黃永傳', '黃建進', '鄭穎鍾', '陳崎豐'] },
+    { group: '第二組', leader: '黃裕達', trainer: '李俐瑩', members: ['黃裕達', '鄭卿吟', '吳育昇', '李俐瑩'] },
+    { group: '第三組', leader: '胡瑀瓴', trainer: '朱心瑋', members: ['胡瑀瓴', '郭柏甫', '朱心瑋', '楊世安', '朱建怡'] },
+    { group: '第四組', leader: '王彬丞', trainer: '陳彥均', members: ['王彬丞', '陳彥均', '東宥忻', '黃怡鈞', '陳品妤'] },
+    { group: '第五組', leader: '陳家慧', trainer: '吳錦秋', members: ['陳家慧', '蔡宜妤', '陳育文', '吳錦秋', '江榮俊'] },
+    { group: '第六組', leader: '林俊成', trainer: '黃氏英', members: ['林俊成', '陳志偉', '黃淑敏', '李佳淯', '黃氏英'] },
+    { group: '第七組', leader: '陳立杰', trainer: '廖聖綺', members: ['陳立杰', '陳冠婷', '林錩億', '廖聖綺', '邱佩芳'] },
+    { group: '第八組', leader: '呂世佳', trainer: '黃立翔', members: ['呂世佳', '陳冠宏', '許志安', '許書瑋', '黃立翔'] },
+    { group: '第九組', leader: '姜則旭', trainer: '劉嘉浤', members: ['姜則旭', '郭洧君', '李亞方', '陳韋翔', '劉嘉浤', '黃承昱'] }
+  ];
+  // 綽號（三個字的名字會自動加上「去姓」的名，例如 陳韋翔 → 韋翔）
+  var EXTRA_ALIASES = { '黃裕達': ['達哥'], '姜則旭': ['小姜'], '黃氏英': ['Mia'] };
+
+  function rosterMembers() {
+    var out = [];
+    ROSTER.forEach(function (g) {
+      g.members.forEach(function (n) {
+        var aliases = (n.length === 3 ? [n.slice(1)] : []).concat(EXTRA_ALIASES[n] || []);
+        out.push({ name: n, aliases: aliases, group: g.group, role: n === g.leader ? '組長' : (n === g.trainer ? '培訓長' : '') });
+      });
+    });
+    return out;
+  }
+
   /* ── 小工具 ───────────────────────────────────────────── */
   var CN_DIGIT = { '零': 0, '〇': 0, '一': 1, '二': 2, '兩': 2, '两': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9 };
   var CN_CLASS = '零〇一二兩两三四五六七八九十';
@@ -138,10 +164,11 @@
     if (!s) return { name: '', known: false };
     if (!members || !members.length) return { name: s, known: null };
     var i, j, m;
+    var low = s.toLowerCase();
     for (i = 0; i < members.length; i++) {
       m = members[i];
       if (m.name === s) return { name: m.name, known: true };
-      for (j = 0; j < (m.aliases || []).length; j++) if (m.aliases[j] === s) return { name: m.name, known: true };
+      for (j = 0; j < (m.aliases || []).length; j++) if (String(m.aliases[j]).toLowerCase() === low) return { name: m.name, known: true };
     }
     // 名字包含在較長字串裡（例如「達哥水電」）
     var best = null, bestLen = 0;
@@ -537,7 +564,7 @@
     members = members || [];
     var by = {};
     members.forEach(function (m) {
-      by[m.name] = { name: m.name, group: m.group || '', ref: 0, close: 0, story: 0, chain: 0, total: 0, weeks: {} };
+      by[m.name] = { name: m.name, group: m.group || '', role: m.role || '', ref: 0, close: 0, story: 0, chain: 0, total: 0, weeks: {} };
     });
     (weeklyRows || []).forEach(function (r) {
       if (r.status !== STATUS.active) return;
@@ -562,7 +589,14 @@
       groups[g].total += p.total;
       groups[g].members.push(p.name);
     });
-    var groupList = Object.keys(groups).map(function (k) { return groups[k]; }).sort(function (a, b) { return b.total - a.total; });
+    var gOrder = [];
+    members.forEach(function (m) { if (gOrder.indexOf(m.group || '未分組') < 0) gOrder.push(m.group || '未分組'); });
+    var groupList = Object.keys(groups).map(function (k) { return groups[k]; }).sort(function (a, b) {
+      if (b.total !== a.total) return b.total - a.total;
+      return gOrder.indexOf(a.group) - gOrder.indexOf(b.group);
+    });
+    var grank = 0, gprev = null;
+    groupList.forEach(function (g, i) { if (g.total !== gprev) { grank = i + 1; gprev = g.total; } g.rank = grank; });
     return { individuals: individuals, groups: groupList };
   }
 
@@ -648,14 +682,14 @@
     });
     if (lb.groups.length > 1 || (lb.groups[0] && lb.groups[0].group !== '未分組')) {
       lines.push('', '👥 小組團隊積分');
-      lb.groups.forEach(function (g, i) { lines.push((i + 1) + '. ' + g.group + '　' + g.total + ' 分'); });
+      lb.groups.forEach(function (g) { lines.push((g.rank <= 3 ? medal[g.rank - 1] : g.rank + '.') + ' ' + g.group + '　' + g.total + ' 分'); });
     }
     lines.push('', '引薦 × 連結 × 成交 × 故事 × 爆擊', '活動期間 11/9～12/18，繼續衝！');
     return lines.join('\n');
   }
 
   return {
-    EVENT: EVENT, POINTS: POINTS, FIELDS: FIELDS, WEEKS: WEEKS, STATUS: STATUS,
+    EVENT: EVENT, POINTS: POINTS, FIELDS: FIELDS, WEEKS: WEEKS, STATUS: STATUS, ROSTER: ROSTER, rosterMembers: rosterMembers,
     normalize: normalize, weekOfDate: weekOfDate, weekFromText: weekFromText, isWeek: isWeek,
     resolveName: resolveName, computeTotal: computeTotal,
     splitBlocks: splitBlocks, parseText: parseText,

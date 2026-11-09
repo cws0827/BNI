@@ -193,3 +193,23 @@ test('同一則回報同一項出現兩次、數字不同，會提醒', () => {
   assert.equal(r.counts.ref, 3);
   assert.ok(r.parseNotes.some(n => n.includes('出現兩次')));
 });
+
+test('正式名單：46 人、9 組，綽號對得上海報上的人', () => {
+  const R = C.rosterMembers();
+  assert.equal(R.length, 46);
+  assert.equal(new Set(R.map(m => m.group)).size, 9);
+  const all = R.flatMap(m => [m.name, ...m.aliases]);
+  assert.equal(new Set(all).size, all.length, '名字或綽號有重複');
+  const n = s => C.resolveName(s, R).name;
+  assert.equal(n('達哥'), '黃裕達');
+  assert.equal(n('韋翔'), '陳韋翔');
+  assert.equal(n('志安'), '許志安');
+  assert.equal(n('小姜'), '姜則旭');
+  assert.equal(n('mia'), '黃氏英');
+  assert.equal(R.find(m => m.name === '林佳欣').role, '組長');
+  assert.equal(R.find(m => m.name === '黃氏英').role, '培訓長');
+  const [r] = C.parseText(FILLED, { members: R });
+  assert.equal(r.name, '黃裕達');
+  assert.deepEqual(r.chains, [['黃裕達', '陳韋翔', '許志安']]);
+  assert.deepEqual(r.warnings, []);
+});

@@ -9,7 +9,7 @@
 var SHEETS = {
   members: {
     name: '會員名單',
-    cols: [['name', '姓名'], ['aliases', '別名（逗號分隔）'], ['group', '小組'], ['note', '備註']]
+    cols: [['name', '姓名'], ['aliases', '別名（逗號分隔）'], ['group', '小組'], ['role', '角色'], ['note', '備註']]
   },
   coordinators: {
     name: '協調員',
@@ -49,11 +49,8 @@ function setup() {
   });
   var mem = ss.getSheetByName(SHEETS.members.name);
   if (mem.getLastRow() === 1) {
-    mem.getRange(2, 1, 3, 4).setValues([
-      ['達哥', '', '', '範例，請換成正式名單'],
-      ['韋翔', '', '', '範例'],
-      ['志安', '', '', '範例']
-    ]);
+    var roster = BNICore.rosterMembers().map(function (m) { return [m.name, m.aliases.join(', '), m.group, m.role, '']; });
+    mem.getRange(2, 1, roster.length, 5).setValues(roster);
   }
   var co = ss.getSheetByName(SHEETS.coordinators.name);
   if (co.getLastRow() === 1) {
@@ -169,7 +166,7 @@ function publicLeaderboard_() {
     ok: true,
     updatedAt: new Date().toISOString(),
     individuals: lb.individuals.map(function (p) {
-      return { rank: p.rank, name: p.name, group: p.group, total: p.total, ref: p.ref, close: p.close, story: p.story, chain: p.chain, weeks: p.weeks };
+      return { rank: p.rank, name: p.name, group: p.group, role: p.role, total: p.total, ref: p.ref, close: p.close, story: p.story, chain: p.chain, weeks: p.weeks };
     }),
     groups: lb.groups
   };
@@ -217,7 +214,8 @@ function readMembers_() {
     return {
       name: String(r.name).trim(),
       aliases: String(r.aliases || '').split(/[,，、\s]+/).map(function (s) { return s.trim(); }).filter(Boolean),
-      group: String(r.group || '').trim()
+      group: String(r.group || '').trim(),
+      role: String(r.role || '').trim()
     };
   });
 }
