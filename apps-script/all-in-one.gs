@@ -717,12 +717,15 @@
   }
 
   function battleReport(week, lb, topN) {
-    topN = topN || 5;
+    topN = topN || 10;
     var medal = ['🥇', '🥈', '🥉', '④', '⑤', '⑥', '⑦', '⑧', '⑨', '⑩'];
     var lines = ['【大信鍊金術師｜' + week + ' 戰況速報】', ''];
     lines.push('🏆 個人積分前 ' + topN + ' 名');
+    var prev = 0;
     lb.individuals.filter(function (p) { return p.total > 0; }).slice(0, topN).forEach(function (p) {
+      if (prev && prev <= 5 && p.rank > 5) lines.push('—— 以上為前 5 名得獎區 ——');
       lines.push((medal[p.rank - 1] || p.rank + '.') + ' ' + p.name + '　' + p.total + ' 分');
+      prev = p.rank;
     });
     if (lb.groups.length > 1 || (lb.groups[0] && lb.groups[0].group !== '未分組')) {
       lines.push('', '👥 小組團隊積分');
