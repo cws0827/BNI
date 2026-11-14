@@ -204,7 +204,7 @@ body{font-family:var(--sans);color:var(--paper);-webkit-font-smoothing:antialias
     </div>
     <div class="bonus" data-in="43.6">三人再合寫引薦故事，每人再 +5 分</div>
     <div class="cap" data-in="34" data-out="43.6" data-fx="fade">同一位客戶在會員之間<b>接力</b></div>
-    <div class="cap" data-in="43.8" data-fx="fade">鏈越長，<b>每個人拿越多分</b></div>
+    <div class="cap" data-in="43.8" data-fx="fade">爆擊每條鏈只算一次<br>想多拿分，就<b>再傳下去並成交</b></div>
   </section>
 
   <!-- ══ S5 獎勵 47–57 ══ -->
@@ -289,31 +289,14 @@ body{font-family:var(--sans);color:var(--paper);-webkit-font-smoothing:antialias
     <div class="cap" data-in="93.6" data-fx="fade">PO 到商務大群後，記得在 LINE 裡<br>用 <b>@</b> 標註合作會員</div>
   </section>
 
-  <!-- ══ S8 協調員 98–110 ══ -->
-  <section class="scene" data-in="98" data-out="110.2" data-fx="fade">
-    <div class="abs center" style="top:70px" data-in="98.3"><div class="kicker">FOR COORDINATORS</div><div class="h gold">協調員：彙整每週回報</div></div>
-    <div class="frame" style="top:180px;height:457px" data-in="98.6" data-out="102.4" data-fx="zoom">
-      <div class="shot"><img src="shots/coord-1-paste.png" alt=""><div class="tap" style="left:14.4%;top:88.8%" data-tap="100.6"></div></div>
-    </div>
-    <div class="frame" style="top:180px;height:600px" data-in="102.4" data-out="106" data-fx="zoom">
-      <div class="shot" data-scroll="103,105.4,0,-103"><img src="shots/coord-2-card.png" alt=""></div>
-    </div>
-    <div class="frame" style="top:180px;height:600px" data-in="106" data-fx="zoom">
-      <div class="shot" data-scroll="106.8,109,0,-260"><img src="shots/coord-3-overview.png" alt=""></div>
-    </div>
-    <div class="cap" data-in="98.8" data-out="102.4" data-fx="fade">把大家的回報<b>整批貼上</b> → 按「解析」</div>
-    <div class="cap" data-in="102.6" data-out="106" data-fx="fade">系統<b>自動算分、檢查錯誤</b>，確認後送出</div>
-    <div class="cap" data-in="106.2" data-fx="fade">交叉檢核服務鏈，<b>提醒誰還沒回報</b><br>排行榜同步更新</div>
-  </section>
-
-  <!-- ══ S9 結尾 110–120 ══ -->
-  <section class="scene" data-in="110" data-out="121" data-fx="fade">
-    <div class="abs center" style="top:110px" data-in="110.3"><div class="h gold" style="font-size:40px">一起鍊成黃金！</div></div>
-    <div class="end-card" style="top:220px" data-in="111"><div class="lb">🏆 活動頁｜即時排行榜</div><div class="u gold">cws0827.github.io/BNI</div></div>
-    <div class="end-card" style="top:360px" data-in="111.8"><div class="lb">✍️ 填寫頁｜每週回報</div><div class="u gold">…/BNI/fill.html</div><div class="lb" style="margin-top:6px;font-size:14px;font-weight:500">活動頁最上方就有「填寫本週回報」按鈕</div></div>
-    <div class="abs center" style="top:560px" data-in="112.8"><div class="pill">⏳ <b class="gold">12/18</b> 結算，每週記得回報</div></div>
-    <div class="abs center" style="top:650px" data-in="113.6"><div class="chant gold" style="font-size:24px">引薦<span>×</span>連結<span>×</span>成交<span>×</span>故事<span>×</span>爆擊</div></div>
-    <div class="credit" data-in="114.4" data-fx="fade">大信醫美業｜美之耀美醫診所｜陳韋翔 協助製作</div>
+  <!-- ══ S8 結尾 98–108 ══ -->
+  <section class="scene" data-in="98" data-out="109" data-fx="fade">
+    <div class="abs center" style="top:110px" data-in="98.3"><div class="h gold" style="font-size:40px">一起鍊成黃金！</div></div>
+    <div class="end-card" style="top:220px" data-in="99"><div class="lb">🏆 活動頁｜即時排行榜</div><div class="u gold">cws0827.github.io/BNI</div></div>
+    <div class="end-card" style="top:360px" data-in="99.8"><div class="lb">✍️ 填寫頁｜每週回報</div><div class="u gold">…/BNI/fill.html</div><div class="lb" style="margin-top:6px;font-size:14px;font-weight:500">活動頁最上方就有「填寫本週回報」按鈕</div></div>
+    <div class="abs center" style="top:560px" data-in="100.8"><div class="pill">⏳ <b class="gold">12/18</b> 結算，每週記得回報</div></div>
+    <div class="abs center" style="top:650px" data-in="101.6"><div class="chant gold" style="font-size:24px">引薦<span>×</span>連結<span>×</span>成交<span>×</span>故事<span>×</span>爆擊</div></div>
+    <div class="credit" data-in="102.4" data-fx="fade">大信醫美業｜美之耀美醫診所｜陳韋翔 協助製作</div>
   </section>
 
   <div id="chapter"></div>
@@ -323,8 +306,8 @@ body{font-family:var(--sans);color:var(--paper);-webkit-font-smoothing:antialias
 <script>
 (function () {
   'use strict';
-  var DUR = 120;
-  var CHAPTERS = [[0, ''], [7, '活動介紹'], [15, '得分方式'], [33, '案例解說'], [47, '獎勵辦法'], [57, '怎麼回報'], [89, '引薦故事'], [98, '協調員'], [110, '']];
+  var DUR = 108;
+  var CHAPTERS = [[0, ''], [7, '活動介紹'], [15, '得分方式'], [33, '案例解說'], [47, '獎勵辦法'], [57, '怎麼回報'], [89, '引薦故事'], [98, '']];
   // 法陣刻度
   document.querySelectorAll('.ticks').forEach(function (g) {
     var s = '';
