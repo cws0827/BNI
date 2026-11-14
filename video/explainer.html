@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<title>大信鍊金術師｜活動與系統說明影片</title>
+<!-- 影片畫面：540×960（以 2 倍輸出成 1080×1920）。render(t) 會畫出第 t 秒的畫面，由 render.js 逐格擷取。 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@700;900&display=block" rel="stylesheet">
+<style>
+:root{
+  --night:#05071A; --gold0:#FFF7DA; --gold1:#FBE6A0; --gold2:#E3B84C; --gold3:#A9761D; --gold4:#6E4A10;
+  --paper:#EEE9DF; --muted:#A6A5C2; --line:rgba(227,184,76,.3);
+  --serif:"Noto Serif TC",serif; --sans:"Noto Sans TC",sans-serif; --latin:"Cinzel","Noto Serif TC",serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:540px;height:960px;overflow:hidden;background:var(--night)}
+body{font-family:var(--sans);color:var(--paper);-webkit-font-smoothing:antialiased}
+#stage{position:relative;width:540px;height:960px;overflow:hidden;
+  background:radial-gradient(120% 60% at 50% -5%,#1E2A7A 0%,transparent 58%),radial-gradient(80% 50% at 100% 70%,rgba(122,63,200,.22),transparent 60%),radial-gradient(70% 45% at 0% 90%,rgba(47,85,200,.2),transparent 60%),var(--night)}
+#stars{position:absolute;inset:0;opacity:.6;background-image:radial-gradient(1px 1px at 20px 30px,#fff,transparent),radial-gradient(1px 1px at 120px 80px,#FBE6A0,transparent),radial-gradient(1.5px 1.5px at 200px 160px,#fff,transparent),radial-gradient(1px 1px at 60px 210px,#cfd8ff,transparent),radial-gradient(1px 1px at 260px 40px,#fff,transparent),radial-gradient(1.2px 1.2px at 170px 260px,#FBE6A0,transparent);background-size:300px 300px}
+.gold{background:linear-gradient(178deg,var(--gold0) 0%,var(--gold1) 28%,var(--gold2) 52%,var(--gold4) 80%,var(--gold2) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.scene{position:absolute;inset:0}
+.abs{position:absolute;left:0;right:0}
+.center{text-align:center}
+
+/* 頂部、底部常駐 */
+#brand{position:absolute;top:22px;left:0;right:0;text-align:center;font-family:var(--serif);font-weight:900;font-size:15px;letter-spacing:.24em;z-index:5}
+#progress{position:absolute;left:28px;right:28px;bottom:26px;height:3px;border-radius:3px;background:rgba(255,255,255,.08);z-index:5}
+#progress i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold3),var(--gold1))}
+#chapter{position:absolute;bottom:38px;left:0;right:0;text-align:center;font-size:12px;letter-spacing:.2em;color:var(--muted);z-index:5}
+
+/* 字幕 */
+.cap{position:absolute;left:24px;right:24px;top:806px;min-height:96px;display:flex;align-items:center;justify-content:center;text-align:center;
+  padding:14px 18px;border-radius:18px;background:rgba(5,7,26,.82);border:1px solid var(--line);font-size:23px;font-weight:700;line-height:1.5;letter-spacing:.02em}
+.cap b{color:var(--gold1)}
+
+/* 場景標題 */
+.kicker{font-family:var(--latin);font-size:13px;letter-spacing:.32em;color:var(--gold3)}
+.h{font-family:var(--serif);font-weight:900;font-size:36px;letter-spacing:.06em;line-height:1.3;margin-top:6px}
+
+/* 開場 */
+.sigil{position:absolute;left:50%;top:120px;width:380px;height:380px;margin-left:-190px}
+.title{top:470px}
+.title h1{margin:0;font-family:var(--serif);font-weight:900;font-size:70px;letter-spacing:.04em;line-height:1.1;filter:drop-shadow(0 4px 0 rgba(0,0,0,.6)) drop-shadow(0 0 26px rgba(227,184,76,.3))}
+.plaque{display:inline-block;margin-top:12px;padding:4px 26px;border-top:1px solid var(--gold2);border-bottom:1px solid var(--gold2);font-family:var(--serif);font-weight:900;font-size:34px;letter-spacing:.3em;text-indent:.3em}
+.ribbon{display:inline-block;margin-top:16px;padding:7px 20px;border:1px solid var(--gold3);border-radius:6px;background:linear-gradient(180deg,#151C4E,#0B1034);font-weight:900;letter-spacing:.22em;font-size:18px;color:var(--gold1)}
+.period{display:inline-block;margin-top:14px;padding:5px 18px;border-radius:999px;border:1px solid var(--gold2);font-weight:700;font-size:18px}
+.period b{font-family:var(--latin);color:var(--gold1)}
+
+/* 概念 */
+.bigline{font-family:var(--serif);font-weight:900;font-size:30px;line-height:1.4;letter-spacing:.04em}
+.pill{display:inline-block;padding:12px 26px;border-radius:16px;border:1px solid var(--line);background:rgba(14,20,56,.85);font-size:22px;font-weight:700}
+.chant{font-family:var(--serif);font-weight:900;font-size:27px;letter-spacing:.1em}
+.chant span{color:var(--gold2);font-family:var(--sans);font-weight:400;margin:0 .25em;font-size:.75em}
+
+/* 計分卡 */
+.rule{position:absolute;left:28px;right:28px;height:130px;display:grid;grid-template-columns:86px 1fr 90px;align-items:center;gap:12px;padding:0 18px;border-radius:20px;
+  background:radial-gradient(120% 120% at 0% 0%,rgba(227,184,76,.16),transparent 60%),rgba(14,20,56,.9);border:1px solid var(--line)}
+.rule svg{width:76px;height:76px}
+.rule .al{font-family:var(--serif);font-weight:900;font-size:22px;letter-spacing:.06em}
+.rule .nm{font-size:18px;font-weight:700;margin-top:2px}
+.rule .ds{font-size:14.5px;color:var(--muted);line-height:1.45;margin-top:2px}
+.rule .pt{font-family:var(--latin);font-weight:900;font-size:46px;text-align:right}
+
+/* 案例 */
+.orbs{position:absolute;top:200px;left:0;right:0;height:130px}
+.orb{position:absolute;top:0;width:118px;height:118px;border-radius:50%;display:grid;place-items:center;text-align:center;
+  background:radial-gradient(circle at 35% 30%,#3B3F9E,#0C0F33 70%);border:3px solid var(--gold2);box-shadow:0 0 30px rgba(227,184,76,.4),0 0 0 6px rgba(227,184,76,.12)}
+.orb b{display:block;font-family:var(--latin);font-weight:900;font-size:34px;line-height:1;color:var(--gold1)}
+.orb span{font-family:var(--serif);font-weight:900;font-size:20px}
+.arw{position:absolute;top:57px;height:4px;background:linear-gradient(90deg,var(--gold3),var(--gold1));transform-origin:left center}
+.arw::after{content:"";position:absolute;right:-4px;top:50%;transform:translateY(-50%);border:9px solid transparent;border-left:13px solid var(--gold1)}
+.steps{position:absolute;top:350px;left:30px;right:30px}
+.step{font-size:20px;font-weight:700;padding:6px 0;display:flex;gap:10px;align-items:center}
+.step i{font-style:normal;font-family:var(--latin);font-weight:900;color:#1d1404;background:var(--gold2);width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:15px;flex:0 0 auto}
+.scards{position:absolute;top:500px;left:22px;right:22px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.sc{border-radius:16px;border:1px solid var(--line);background:rgba(5,7,26,.75);padding:12px 10px;text-align:center}
+.sc .who{font-family:var(--serif);font-weight:900;font-size:19px}
+.sc .ln{font-size:14px;color:var(--muted);line-height:1.6;margin:4px 0 6px}
+.sc .ln b{color:var(--gold1);font-family:var(--latin)}
+.sc .tot{font-family:var(--latin);font-weight:900;font-size:40px;line-height:1}
+.sc .tot small{font-family:var(--sans);font-size:15px;color:var(--muted)}
+.bonus{position:absolute;top:720px;left:22px;right:22px;padding:12px;border-radius:14px;text-align:center;font-weight:900;font-size:19px;color:#1d1404;background:linear-gradient(180deg,var(--gold0),var(--gold2))}
+
+/* 手機畫面框 */
+.frame{position:absolute;left:50%;width:440px;margin-left:-220px;border-radius:26px;overflow:hidden;border:2px solid rgba(251,230,160,.55);background:#0A0E2C;box-shadow:0 20px 60px rgba(0,0,0,.55),0 0 40px rgba(227,184,76,.12)}
+.shot{position:absolute;left:0;top:0;width:100%}
+.shot img{display:block;width:100%}
+.layer{position:absolute;inset:0}
+.tap{position:absolute;width:0;height:0}
+.tap::before,.tap::after{content:"";position:absolute;left:-26px;top:-26px;width:52px;height:52px;border-radius:50%}
+.tap::before{background:rgba(255,240,190,.38);border:3px solid #FFF3C4;box-shadow:0 0 18px rgba(255,230,150,.8)}
+.tap::after{border:3px solid #FFE48A;transform:scale(var(--s,1));opacity:var(--o,0)}
+.ring{position:absolute;border:3px solid #FFE48A;border-radius:14px;box-shadow:0 0 20px rgba(255,220,120,.7)}
+.badge{display:inline-block;font-family:var(--latin);font-weight:900;font-size:14px;letter-spacing:.2em;color:#1d1404;background:linear-gradient(180deg,var(--gold1),var(--gold2));padding:4px 14px;border-radius:999px}
+.url{display:inline-block;margin-top:8px;padding:6px 16px;border-radius:999px;border:1px solid var(--line);background:rgba(5,7,26,.7);font-size:16px;color:var(--gold1);font-weight:700;letter-spacing:.02em}
+.note{position:absolute;padding:8px 14px;border-radius:12px;background:#2A1430;border:1px solid rgba(240,140,140,.6);color:#FFD2D2;font-size:16px;font-weight:700}
+
+/* 結尾 */
+.end-card{position:absolute;left:30px;right:30px;padding:20px;border-radius:20px;border:1px solid var(--line);background:rgba(14,20,56,.88);text-align:center}
+.end-card .lb{font-size:17px;color:var(--muted);font-weight:700;letter-spacing:.1em}
+.end-card .u{font-family:var(--latin);font-weight:900;font-size:27px;margin-top:6px;letter-spacing:.02em;word-break:break-all}
+.credit{position:absolute;left:0;right:0;top:770px;text-align:center;font-size:15px;color:var(--gold1);letter-spacing:.08em}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="stars"></div>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <linearGradient id="gGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF7DA"/><stop offset=".45" stop-color="#E3B84C"/><stop offset="1" stop-color="#8A5F16"/></linearGradient>
+    <linearGradient id="gViolet" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F1E4FF"/><stop offset=".5" stop-color="#A46BFF"/><stop offset="1" stop-color="#4A1C96"/></linearGradient>
+    <radialGradient id="orbFill" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#4B4FC4"/><stop offset=".55" stop-color="#16195A"/><stop offset="1" stop-color="#07081F"/></radialGradient>
+    <radialGradient id="core" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFF7DA"/><stop offset=".35" stop-color="#E3B84C" stop-opacity=".85"/><stop offset="1" stop-color="#E3B84C" stop-opacity="0"/></radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs></svg>
+  <div id="brand" class="gold" data-in="6.5">大信鍊金術師｜黃金矩陣計畫</div>
+
+  <!-- ══ S1 開場 0–7 ══ -->
+  <section class="scene" data-in="0" data-out="7.2" data-fx="fade" data-d="0.01">
+    <svg class="sigil" viewBox="0 0 400 400" data-in="0.2" data-fx="zoom" data-d="1.2">
+      <circle cx="200" cy="200" r="120" fill="url(#core)" opacity=".35"/>
+      <g class="rot" data-rot="12" fill="none" stroke="#E3B84C">
+        <circle cx="200" cy="200" r="186" stroke-opacity=".55" stroke-width="1.2"/>
+        <circle cx="200" cy="200" r="176" stroke-opacity=".35" stroke-dasharray="2 7"/>
+        <g stroke-opacity=".6" class="ticks"></g>
+      </g>
+      <g class="rot" data-rot="-18" fill="none" stroke="#E3B84C" stroke-opacity=".35"><circle cx="200" cy="200" r="128"/><path d="M200 72 310.9 264 89.1 264Z M200 328 89.1 136 310.9 136Z"/></g>
+      <g filter="url(#glow)" stroke="#FBE6A0" stroke-width="3" fill="none"><path d="M200 74 L86 272 L314 272 Z"/><path d="M200 74 L200 272" stroke-opacity=".55"/></g>
+      <g transform="translate(200 214)"><path d="M0 -34 30 -17 30 17 0 34 -30 17 -30 -17Z" fill="#1A1E5C" stroke="#E3B84C" stroke-width="2"/><circle r="9" fill="url(#core)"/></g>
+      <g font-family="Cinzel,serif" font-weight="900" font-size="38" text-anchor="middle">
+        <circle cx="200" cy="74" r="40" fill="url(#orbFill)" stroke="#E3B84C" stroke-width="3"/><text x="200" y="88" fill="url(#gGold)">A</text>
+        <circle cx="86" cy="272" r="40" fill="url(#orbFill)" stroke="#E3B84C" stroke-width="3"/><text x="86" y="286" fill="url(#gGold)">B</text>
+        <circle cx="314" cy="272" r="40" fill="url(#orbFill)" stroke="#E3B84C" stroke-width="3"/><text x="314" y="286" fill="url(#gGold)">C</text>
+      </g>
+    </svg>
+    <div class="abs center title">
+      <div data-in="0.9"><h1 class="gold">大信鍊金術師</h1></div>
+      <div data-in="1.7"><div class="plaque"><span class="gold">黃金矩陣計畫</span></div></div>
+      <div data-in="2.5"><div class="ribbon">✦ 黃金服務鏈引薦積分賽 ✦</div></div>
+      <div data-in="3.3"><div class="period">活動期間　<b>11/9 ～ 12/18</b></div></div>
+    </div>
+    <div class="cap" data-in="4" data-fx="fade">一支影片看懂：<b>活動規則</b> ＋ <b>怎麼回報</b></div>
+  </section>
+
+  <!-- ══ S2 概念 7–15 ══ -->
+  <section class="scene" data-in="7" data-out="15.2" data-fx="fade">
+    <div class="abs center" style="top:110px" data-in="7.3"><div class="kicker">WHAT IS IT</div><div class="h gold">這是什麼活動？</div></div>
+    <div class="abs center" style="top:250px" data-in="8.2"><div class="pill">📅　6 週・<b class="gold" style="font-family:var(--latin)">11/9 ～ 12/18</b></div></div>
+    <div class="abs center" style="top:340px" data-in="9.2"><div class="bigline"><span class="gold">個人積分競賽</span><br>×<br><span class="gold">小組團隊榮譽</span></div></div>
+    <div class="abs center" style="top:540px" data-in="10.6"><div class="pill">個人得分加總 ＝ <b class="gold">小組總分</b></div></div>
+    <div class="abs center" style="top:650px" data-in="11.6"><div class="chant gold">引薦<span>×</span>連結<span>×</span>成交<span>×</span>故事<span>×</span>爆擊</div></div>
+    <div class="cap" data-in="8" data-fx="fade">把引薦串成<b>服務鏈</b>，一起把商機<b>鍊成黃金</b></div>
+  </section>
+
+  <!-- ══ S3 四種得分 15–33 ══ -->
+  <section class="scene" data-in="15" data-out="33.2" data-fx="fade">
+    <div class="abs center" style="top:84px" data-in="15.3"><div class="kicker">SCORING</div><div class="h gold">四種得分方式</div></div>
+    <div class="rule" style="top:200px" data-in="16.2" data-fx="left">
+      <svg viewBox="0 0 80 80"><path d="M32 8h16M34 8v18L18 58a8 8 0 0 0 7 12h30a8 8 0 0 0 7-12L46 26V8" fill="none" stroke="url(#gGold)" stroke-width="3" stroke-linejoin="round"/><path d="M22 52h36l4 8a5 5 0 0 1-4 7H22a5 5 0 0 1-4-7z" fill="url(#gViolet)"/></svg>
+      <div><div class="al gold">注入能量</div><div class="nm">基礎引薦</div><div class="ds">給出 1 張有效外部引薦，引薦人得分</div></div>
+      <div class="pt gold">+1</div>
+    </div>
+    <div class="rule" style="top:346px" data-in="19.6" data-fx="left">
+      <svg viewBox="0 0 80 80"><path d="M10 60h24l4-14H14zM46 60h24l-4-14H42zM26 44h28l-4-14H30z" fill="url(#gGold)" stroke="#6E4A10" stroke-width="1.5" stroke-linejoin="round"/><path d="M40 8v8M24 14l4 6M56 14l-4 6" stroke="#FBE6A0" stroke-width="3" stroke-linecap="round"/></svg>
+      <div><div class="al gold">鍊成黃金</div><div class="nm">引薦成功成交</div><div class="ds">你給的引薦成交了，引薦人再得分</div></div>
+      <div class="pt gold">+5</div>
+    </div>
+    <div class="rule" style="top:492px" data-in="23" data-fx="left">
+      <svg viewBox="0 0 80 80"><path d="M18 16h40a6 6 0 0 1 6 6v36a6 6 0 0 1-6 6H22" fill="none" stroke="url(#gGold)" stroke-width="3"/><path d="M18 16a6 6 0 0 0-6 6v4h12v-4a6 6 0 0 0-6-6zM22 64a6 6 0 0 1-6-6v-4h12v4a6 6 0 0 1-6 6z" fill="url(#gGold)"/><circle cx="44" cy="40" r="10" fill="none" stroke="#FBE6A0" stroke-width="2"/></svg>
+      <div><div class="al gold">解鎖鍊金密卷</div><div class="nm">引薦故事</div><div class="ds">PO 商務大群並標註合作會員，參與者各得分</div></div>
+      <div class="pt gold">+5</div>
+    </div>
+    <div class="rule" style="top:638px" data-in="26.4" data-fx="left">
+      <svg viewBox="0 0 80 80"><g fill="none" stroke="url(#gGold)" stroke-width="7" stroke-linecap="round"><rect x="8" y="30" width="30" height="20" rx="10" transform="rotate(-35 23 40)"/><rect x="42" y="30" width="30" height="20" rx="10" transform="rotate(-35 57 40)"/></g><path d="M40 6l3 9 9 1-7 6 2 9-7-5-7 5 2-9-7-6 9-1z" fill="#FFF7DA"/></svg>
+      <div><div class="al gold">核爆級連鎖反應</div><div class="nm">服務鏈爆擊</div><div class="ds">A→B→C 接力 3 人以上、最後成交，鏈上每人得分</div></div>
+      <div class="pt gold">+5</div>
+    </div>
+    <div class="cap" data-in="16.4" data-out="19.6" data-fx="fade">給出一張有效的外部引薦　<b>+1 分</b></div>
+    <div class="cap" data-in="19.8" data-out="23" data-fx="fade">這張引薦成交了，引薦人再　<b>+5 分</b></div>
+    <div class="cap" data-in="23.2" data-out="26.4" data-fx="fade">合寫引薦故事 PO 大群，參與會員各　<b>+5 分</b></div>
+    <div class="cap" data-in="26.6" data-fx="fade">服務鏈接力 3 人以上並成交，鏈上每人　<b>+5 分</b></div>
+  </section>
+
+  <!-- ══ S4 案例 33–47 ══ -->
+  <section class="scene" data-in="33" data-out="47.2" data-fx="fade">
+    <div class="abs center" style="top:84px" data-in="33.3"><div class="kicker">CASE STUDY</div><div class="h gold">服務鏈爆擊怎麼算？</div></div>
+    <div class="orbs">
+      <div class="orb" style="left:26px" data-in="34" data-fx="zoom"><div><b>A</b><span>達哥</span></div></div>
+      <div class="arw" style="left:150px;width:58px" data-in="35.2" data-fx="grow"></div>
+      <div class="orb" style="left:211px" data-in="35.6" data-fx="zoom"><div><b>B</b><span>韋翔</span></div></div>
+      <div class="arw" style="left:335px;width:58px" data-in="37.4" data-fx="grow"></div>
+      <div class="orb" style="left:396px" data-in="37.8" data-fx="zoom"><div><b>C</b><span>志安</span></div></div>
+    </div>
+    <div class="steps">
+      <div class="step" data-in="35.2"><i>1</i>達哥把外部客戶引薦給韋翔</div>
+      <div class="step" data-in="36.6"><i>2</i>韋翔成交後，再延伸介紹給志安</div>
+      <div class="step" data-in="38.2"><i>3</i>志安最後也成交 💥 鏈上三人都爆擊</div>
+    </div>
+    <div class="scards">
+      <div class="sc" data-in="39.4"><div class="who gold">A 達哥</div><div class="ln">發給B <b>+1</b><br>B成交 <b>+5</b><br>爆擊 <b>+5</b></div><div class="tot gold"><span data-count="40,42,11">0</span><small> 分</small></div></div>
+      <div class="sc" data-in="39.8"><div class="who gold">B 韋翔</div><div class="ln">發給C <b>+1</b><br>C成交 <b>+5</b><br>爆擊 <b>+5</b></div><div class="tot gold"><span data-count="40.4,42.4,11">0</span><small> 分</small></div></div>
+      <div class="sc" data-in="40.2"><div class="who gold">C 志安</div><div class="ln">&nbsp;<br>&nbsp;<br>爆擊 <b>+5</b></div><div class="tot gold"><span data-count="40.8,42.8,5">0</span><small> 分</small></div></div>
+    </div>
+    <div class="bonus" data-in="43.6">三人再合寫引薦故事，每人再 +5 分</div>
+    <div class="cap" data-in="34" data-out="43.6" data-fx="fade">同一位客戶在會員之間<b>接力</b></div>
+    <div class="cap" data-in="43.8" data-fx="fade">鏈越長，<b>每個人拿越多分</b></div>
+  </section>
+
+  <!-- ══ S5 獎勵 47–57 ══ -->
+  <section class="scene" data-in="47" data-out="57.2" data-fx="fade">
+    <div class="abs center" style="top:70px" data-in="47.3"><div class="kicker">REWARDS</div><div class="h gold">獎勵辦法</div></div>
+    <div class="frame" style="top:170px;height:600px" data-in="47.8" data-out="52.4" data-fx="zoom">
+      <div class="shot" data-scroll="48.8,51.8,0,-83"><img src="shots/board-podium.png" alt=""></div>
+    </div>
+    <div class="frame" style="top:200px;height:487px" data-in="52.4" data-fx="zoom">
+      <div class="shot"><img src="shots/board-awards.png" alt=""></div>
+    </div>
+    <div class="cap" data-in="48" data-out="52.4" data-fx="fade">個人前五名：$1,000／$800／$600<br>星巴克禮券 $450／$300</div>
+    <div class="cap" data-in="52.6" data-fx="fade">小組前三名：最佳鍊成／黃金連線／協作鍊金團隊獎</div>
+  </section>
+
+  <!-- ══ S6 填寫頁 57–89 ══ -->
+  <section class="scene" data-in="57" data-out="89.2" data-fx="fade">
+    <div class="abs center" style="top:62px" data-in="57.3"><div class="h gold" style="font-size:31px">每週回報，用填寫頁最快</div><div class="url">cws0827.github.io/BNI/fill.html</div></div>
+
+    <!-- step 1 -->
+    <div data-in="57.8" data-out="64.2" data-fx="fade">
+      <div class="abs center" style="top:170px"><span class="badge">STEP 1 / 4</span></div>
+      <div class="frame" style="top:212px;height:359px">
+        <div class="shot"><img src="shots/fill-1-empty.png" alt=""></div>
+        <div class="shot" data-in="60.4" data-fx="fade" data-d="0.3"><img src="shots/fill-1-name.png" alt=""></div>
+        <div class="tap" style="left:50%;top:48.6%" data-tap="59.6"></div>
+      </div>
+      <div class="cap">① 從清單<b>選你的姓名</b>（手機會記住）</div>
+    </div>
+
+    <!-- step 2 -->
+    <div data-in="64.2" data-out="71.2" data-fx="fade">
+      <div class="abs center" style="top:170px"><span class="badge">STEP 2 / 4</span></div>
+      <div class="frame" style="top:212px;height:440px">
+        <div class="shot"><img src="shots/fill-2-zero.png" alt=""></div>
+        <div class="shot" data-in="67.8" data-fx="fade" data-d="0.2"><img src="shots/fill-2-set.png" alt=""></div>
+        <div class="tap" style="left:89.1%;top:31.9%" data-tap="66.2"></div>
+        <div class="tap" style="left:89.1%;top:54.8%" data-tap="67.6"></div>
+      </div>
+      <div class="cap">② 按 <b>＋</b> 填本週數字，沒有就是 0</div>
+    </div>
+
+    <!-- step 3 -->
+    <div data-in="71.2" data-out="80.2" data-fx="fade">
+      <div class="abs center" style="top:170px"><span class="badge">STEP 3 / 4</span></div>
+      <div class="frame" style="top:212px;height:575px">
+        <div class="shot" data-scroll="71.6,72.4,0,-70">
+          <img src="shots/fill-3-a.png" alt="">
+          <div class="ring" style="left:49.5%;top:77%;width:43%;height:7.4%" data-ring="72.6,75"></div>
+          <div class="tap" style="left:55.3%;top:48.3%" data-tap="75.6"></div>
+          <div class="tap" style="left:55.3%;top:60.1%" data-tap="76.6"></div>
+        </div>
+        <div class="shot" data-in="77.2" data-fx="fade" data-d="0.3"><div data-scroll="0,1,-70,-70"><img src="shots/fill-3-done.png" alt="" style="display:block;width:100%"></div></div>
+      </div>
+      <div class="note" style="left:196px;top:664px" data-in="72.8" data-out="75.2" data-fx="fade">不小心按到？按這顆移除 ↓</div>
+      <div class="cap">③ 有服務鏈就新增：<b>A 預設是你</b>，<br>依接力順序選 B、C</div>
+    </div>
+
+    <!-- step 4 -->
+    <div data-in="80.2" data-out="89.2" data-fx="fade">
+      <div class="abs center" style="top:170px"><span class="badge">STEP 4 / 4</span></div>
+      <div class="frame" style="top:212px;height:575px">
+        <div class="shot" data-scroll="81.4,85,0,-424">
+          <img src="shots/fill-4-result.png" alt="">
+          <div class="tap" style="left:73.3%;top:90.1%" data-tap="86.4"></div>
+        </div>
+      </div>
+      <div class="cap">④ 自動算分 → <b>複製</b>或<b>分享到 LINE</b><br>貼到商務大群就完成</div>
+    </div>
+  </section>
+
+  <!-- ══ S7 引薦故事 89–98 ══ -->
+  <section class="scene" data-in="89" data-out="98.2" data-fx="fade">
+    <div class="abs center" style="top:70px" data-in="89.3"><div class="kicker">STORY</div><div class="h gold">引薦故事也能一鍵產生</div></div>
+    <div class="frame" style="top:180px;height:468px" data-in="89.6" data-out="93.4" data-fx="zoom">
+      <div class="shot"><img src="shots/story-1.png" alt=""></div>
+    </div>
+    <div class="frame" style="top:180px;height:528px" data-in="93.4" data-fx="zoom">
+      <div class="shot"><img src="shots/story-2.png" alt=""><div class="tap" style="left:73.3%;top:76.2%" data-tap="95.4"></div></div>
+    </div>
+    <div class="cap" data-in="89.8" data-out="93.4" data-fx="fade">「引薦故事」分頁：選人、寫三段內容</div>
+    <div class="cap" data-in="93.6" data-fx="fade">PO 到商務大群後，記得在 LINE 裡<br>用 <b>@</b> 標註合作會員</div>
+  </section>
+
+  <!-- ══ S8 協調員 98–110 ══ -->
+  <section class="scene" data-in="98" data-out="110.2" data-fx="fade">
+    <div class="abs center" style="top:70px" data-in="98.3"><div class="kicker">FOR COORDINATORS</div><div class="h gold">協調員：彙整每週回報</div></div>
+    <div class="frame" style="top:180px;height:457px" data-in="98.6" data-out="102.4" data-fx="zoom">
+      <div class="shot"><img src="shots/coord-1-paste.png" alt=""><div class="tap" style="left:14.4%;top:88.8%" data-tap="100.6"></div></div>
+    </div>
+    <div class="frame" style="top:180px;height:600px" data-in="102.4" data-out="106" data-fx="zoom">
+      <div class="shot" data-scroll="103,105.4,0,-103"><img src="shots/coord-2-card.png" alt=""></div>
+    </div>
+    <div class="frame" style="top:180px;height:600px" data-in="106" data-fx="zoom">
+      <div class="shot" data-scroll="106.8,109,0,-260"><img src="shots/coord-3-overview.png" alt=""></div>
+    </div>
+    <div class="cap" data-in="98.8" data-out="102.4" data-fx="fade">把大家的回報<b>整批貼上</b> → 按「解析」</div>
+    <div class="cap" data-in="102.6" data-out="106" data-fx="fade">系統<b>自動算分、檢查錯誤</b>，確認後送出</div>
+    <div class="cap" data-in="106.2" data-fx="fade">交叉檢核服務鏈，<b>提醒誰還沒回報</b><br>排行榜同步更新</div>
+  </section>
+
+  <!-- ══ S9 結尾 110–120 ══ -->
+  <section class="scene" data-in="110" data-out="121" data-fx="fade">
+    <div class="abs center" style="top:110px" data-in="110.3"><div class="h gold" style="font-size:40px">一起鍊成黃金！</div></div>
+    <div class="end-card" style="top:220px" data-in="111"><div class="lb">🏆 活動頁｜即時排行榜</div><div class="u gold">cws0827.github.io/BNI</div></div>
+    <div class="end-card" style="top:360px" data-in="111.8"><div class="lb">✍️ 填寫頁｜每週回報</div><div class="u gold">…/BNI/fill.html</div><div class="lb" style="margin-top:6px;font-size:14px;font-weight:500">活動頁最上方就有「填寫本週回報」按鈕</div></div>
+    <div class="abs center" style="top:560px" data-in="112.8"><div class="pill">⏳ <b class="gold">12/18</b> 結算，每週記得回報</div></div>
+    <div class="abs center" style="top:650px" data-in="113.6"><div class="chant gold" style="font-size:24px">引薦<span>×</span>連結<span>×</span>成交<span>×</span>故事<span>×</span>爆擊</div></div>
+    <div class="credit" data-in="114.4" data-fx="fade">大信醫美業｜美之耀美醫診所｜陳韋翔 協助製作</div>
+  </section>
+
+  <div id="chapter"></div>
+  <div id="progress"><i></i></div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var DUR = 120;
+  var CHAPTERS = [[0, ''], [7, '活動介紹'], [15, '得分方式'], [33, '案例解說'], [47, '獎勵辦法'], [57, '怎麼回報'], [89, '引薦故事'], [98, '協調員'], [110, '']];
+  // 法陣刻度
+  document.querySelectorAll('.ticks').forEach(function (g) {
+    var s = '';
+    for (var i = 0; i < 72; i++) {
+      var a = i * 5 * Math.PI / 180, r2 = i % 6 ? 181 : 172;
+      s += '<line x1="' + (200 + 186 * Math.cos(a)) + '" y1="' + (200 + 186 * Math.sin(a)) + '" x2="' + (200 + r2 * Math.cos(a)) + '" y2="' + (200 + r2 * Math.sin(a)) + '"/>';
+    }
+    g.innerHTML = s;
+  });
+
+  // 字幕內容包一層，避免粗體字被 flex 拆成獨立區塊
+  document.querySelectorAll('.cap').forEach(function (c) { c.innerHTML = '<span>' + c.innerHTML + '</span>'; });
+  function clamp(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
+  function ease(x) { return 1 - Math.pow(1 - x, 3); }
+  function inOut(x) { return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
+  function nums(s) { return s.split(',').map(Number); }
+
+  var els = Array.prototype.slice.call(document.querySelectorAll('[data-in]'));
+  var scrolls = Array.prototype.slice.call(document.querySelectorAll('[data-scroll]'));
+  var counts = Array.prototype.slice.call(document.querySelectorAll('[data-count]'));
+  var taps = Array.prototype.slice.call(document.querySelectorAll('[data-tap]'));
+  var rings = Array.prototype.slice.call(document.querySelectorAll('[data-ring]'));
+  var rots = Array.prototype.slice.call(document.querySelectorAll('.rot'));
+
+  window.render = function (t) {
+    els.forEach(function (el) {
+      var tin = +el.dataset.in, tout = el.dataset.out != null ? +el.dataset.out : Infinity, d = +(el.dataset.d || 0.6);
+      var a = ease(clamp((t - tin) / d)), b = 1 - clamp((t - (tout - 0.45)) / 0.45);
+      var o = Math.min(a, b), fx = el.dataset.fx || 'up', tr = '';
+      if (fx === 'up') tr = 'translateY(' + ((1 - a) * 26) + 'px)';
+      else if (fx === 'zoom') tr = 'scale(' + (0.88 + 0.12 * a) + ')';
+      else if (fx === 'left') tr = 'translateX(' + ((1 - a) * -40) + 'px)';
+      else if (fx === 'grow') { tr = 'scaleX(' + a + ')'; o = b; }
+      el.style.opacity = o;
+      el.style.transform = tr;
+      el.style.visibility = o <= 0.002 ? 'hidden' : 'visible';
+    });
+    scrolls.forEach(function (el) {
+      var v = nums(el.dataset.scroll), p = inOut(clamp((t - v[0]) / (v[1] - v[0])));
+      el.style.transform = 'translateY(' + (v[2] + (v[3] - v[2]) * p) + 'px)';
+    });
+    counts.forEach(function (el) {
+      var v = nums(el.dataset.count);
+      el.textContent = Math.round(v[2] * ease(clamp((t - v[0]) / (v[1] - v[0]))));
+    });
+    taps.forEach(function (el) {
+      var tt = +el.dataset.tap, vis = t >= tt - 0.5 && t <= tt + 0.7;
+      var p = clamp((t - tt) / 0.7);
+      el.style.opacity = vis ? (t < tt - 0.3 ? (t - (tt - 0.5)) / 0.2 : (t > tt + 0.5 ? (tt + 0.7 - t) / 0.2 : 1)) : 0;
+      el.style.setProperty('--s', t >= tt ? 0.8 + 1.4 * p : 1);
+      el.style.setProperty('--o', t >= tt ? 1 - p : 0);
+    });
+    rings.forEach(function (el) {
+      var v = nums(el.dataset.ring), on = t >= v[0] && t <= v[1];
+      el.style.opacity = on ? 0.55 + 0.45 * Math.abs(Math.sin((t - v[0]) * 4)) : 0;
+    });
+    rots.forEach(function (el) { el.setAttribute('transform', 'rotate(' + (t * +el.dataset.rot) + ' 200 200)'); });
+    document.querySelector('#progress i').style.width = (clamp(t / DUR) * 100) + '%';
+    var ch = '';
+    CHAPTERS.forEach(function (c) { if (t >= c[0]) ch = c[1]; });
+    document.getElementById('chapter').textContent = ch;
+  };
+  window.DURATION = DUR;
+  var q = location.search.match(/[?&]t=([\d.]+)/);
+  window.render(q ? +q[1] : 0);
+})();
+</script>
+</body>
+</html>
