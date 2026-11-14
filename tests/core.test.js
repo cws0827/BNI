@@ -267,3 +267,42 @@ test('一鍵部署檔在 Apps Script 環境能載入，setup 會寫入 46 位會
   ctx.doPost({ postData: { contents: JSON.stringify({ action: 'login', code: 'wrong' }) } });
   assert.equal(JSON.parse(out.pop()).ok, false);
 });
+
+test('填寫頁產生的週回報，協調員貼上後能原樣解析回來', () => {
+  const R = C.rosterMembers();
+  const text = C.fillWeekly({
+    week: '11/16-20', name: '陳韋翔', counts: { ref: 2, close: 1, story: 1 },
+    chains: [['黃裕達', '陳韋翔', '許志安'], ['陳韋翔', '林佳欣', '黃立翔', '吳育昇']]
+  });
+  assert.match(text, /⭐ 本週個人積分合計：22分/);
+  const [r] = C.parseText(text, { members: R });
+  assert.equal(r.week, '11/16-20');
+  assert.equal(r.name, '陳韋翔');
+  assert.deepEqual(r.counts, { ref: 2, close: 1, story: 1, chain: 2 });
+  assert.equal(r.selfTotal, 22);
+  assert.equal(r.total, 22);
+  assert.equal(r.chains.length, 2);
+  assert.deepEqual(r.warnings, []);
+  assert.deepEqual(r.parseNotes, []);
+});
+
+test('填寫頁：沒有服務鏈時寫「無」，解析不會出錯', () => {
+  const text = C.fillWeekly({ week: '11/9-13', name: '林佳欣', counts: { ref: 0, close: 0, story: 0 }, chains: [] });
+  const [r] = C.parseText(text, { members: C.rosterMembers() });
+  assert.deepEqual(r.counts, { ref: 0, close: 0, story: 0, chain: 0 });
+  assert.deepEqual(r.warnings, []);
+  assert.deepEqual(r.parseNotes, []);
+});
+
+test('填寫頁產生的引薦故事，協調員貼上後能原樣解析回來', () => {
+  const text = C.fillStory({
+    referrer: '黃裕達', referee: '陳韋翔', collaborators: ['許志安'],
+    scenario: '客戶新居要做全室水電\n預算有限', docking: '先約看現場', result: '成交'
+  });
+  const [s] = C.parseText(text, { members: C.rosterMembers(), week: '11/9-13' });
+  assert.equal(s.type, 'story');
+  assert.deepEqual(s.participants, ['黃裕達', '陳韋翔', '許志安']);
+  assert.match(s.scenario, /預算有限/);
+  assert.equal(s.result, '成交');
+  assert.deepEqual(s.warnings, []);
+});

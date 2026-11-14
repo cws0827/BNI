@@ -214,6 +214,10 @@ tr:last-child td{border-bottom:0}
         <pre id="tplWeekly"></pre>
       </div>
       <div class="tpl">
+        <div class="row"><h3>填寫頁連結（可以跟範本一起發）</h3><button class="btn sm" type="button" data-copy="tplFill">複製</button></div>
+        <pre id="tplFill"></pre>
+      </div>
+      <div class="tpl">
         <div class="row"><h3>引薦故事格式</h3><button class="btn sm" type="button" data-copy="tplStory">複製</button></div>
         <pre id="tplStory"></pre>
       </div>
@@ -470,6 +474,7 @@ tr:last-child td{border-bottom:0}
     var w = $('tplWeek').value;
     $('tplWeekly').textContent = C.weeklyTemplate(w);
     $('tplStory').textContent = C.storyTemplate();
+    $('tplFill').textContent = '📣 ' + w + ' 積分回報開始囉！\n\n不想自己填格式的，可以用填寫頁：選姓名、按數字，自動算分、產生回報格式，複製回來貼在這裡就好 👇\n' + new URL('fill.html', location.href).href.replace(/report\.html.*$/, 'fill.html');
     $('tplBattle').textContent = '載入中…';
     api('leaderboard').then(function (res) {
       $('tplBattle').textContent = res.ok ? C.battleReport(w, res) : (res.error || '載入失敗');

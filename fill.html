@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark only">
+<title>填寫本週回報｜大信鍊金術師</title>
+<meta name="description" content="大信鍊金術師：黃金矩陣計畫｜選姓名、按數字，自動產生積分回報與引薦故事格式。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#05071A; --card:#0E1438; --card2:#141C4C;
+  --line:rgba(227,184,76,.26); --line2:rgba(227,184,76,.12);
+  --gold0:#FFF7DA; --gold1:#FBE6A0; --gold2:#E3B84C; --gold3:#A9761D; --gold4:#6E4A10;
+  --paper:#EEE9DF; --muted:#9C9BB8; --warn:#F2B35B; --ok:#7FD6A4; --line-green:#06C755;
+  --serif:"Noto Serif TC","Songti TC",serif;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  --latin:"Cinzel","Noto Serif TC",serif;
+}
+*{box-sizing:border-box}
+html{background:var(--night);color-scheme:dark}
+body{margin:0;color:var(--paper);font-family:var(--sans);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;
+  background:radial-gradient(120% 60% at 50% -10%,#1A2470 0%,transparent 55%),radial-gradient(80% 60% at 100% 60%,rgba(122,63,200,.15),transparent 60%),var(--night);background-attachment:fixed}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--gold1)}
+.wrap{max-width:640px;margin:0 auto;padding:0 16px}
+.gold{background:linear-gradient(178deg,var(--gold0) 0%,var(--gold1) 28%,var(--gold2) 52%,var(--gold4) 78%,var(--gold2) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+:focus-visible{outline:2px solid var(--gold1);outline-offset:2px}
+
+.top{position:sticky;top:0;z-index:20;background:rgba(5,7,26,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line2)}
+.top .wrap{display:flex;align-items:center;height:54px;gap:12px}
+.top b{font-family:var(--serif);font-weight:900;letter-spacing:.08em;margin-right:auto}
+.top a{font-size:.84rem;color:var(--muted);text-decoration:none}
+
+.intro{text-align:center;padding:26px 0 8px}
+.intro .latin{font-family:var(--latin);font-size:.72rem;letter-spacing:.24em;color:var(--gold3)}
+.intro h1{margin:4px 0 6px;font-family:var(--serif);font-weight:900;font-size:clamp(1.7rem,7vw,2.3rem);letter-spacing:.06em;line-height:1.3}
+.intro p{margin:0;color:var(--muted);font-size:.92rem}
+
+.tabs{display:flex;padding:4px;border-radius:999px;background:rgba(5,7,26,.7);border:1px solid var(--line);margin:18px 0 6px}
+.tabs button{flex:1;border:0;background:transparent;color:var(--muted);font-weight:700;padding:10px 8px;border-radius:999px;font-size:.95rem}
+.tabs button[aria-selected="true"]{background:linear-gradient(180deg,var(--gold1),var(--gold2));color:#1d1404}
+.view[hidden]{display:none}
+
+.card{margin-top:14px;padding:18px 16px;border-radius:18px;background:linear-gradient(180deg,rgba(20,28,76,.85),rgba(10,15,46,.9));border:1px solid var(--line)}
+.card h2{margin:0 0 4px;font-size:1.05rem;display:flex;align-items:center;gap:10px}
+.card h2 .no{font-family:var(--latin);font-weight:900;color:var(--gold2);font-size:.9rem;border:1px solid var(--gold3);border-radius:50%;width:26px;height:26px;display:grid;place-items:center;flex:0 0 auto}
+.card .sub{color:var(--muted);font-size:.84rem;margin:0 0 12px}
+label.f{display:block;font-size:.8rem;color:var(--muted);margin-bottom:6px}
+select,textarea,input[type=text]{width:100%;background:#080B22;border:1px solid rgba(227,184,76,.32);border-radius:12px;padding:12px 14px;font-size:1.02rem;outline:none}
+select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--gold2) 50%),linear-gradient(135deg,var(--gold2) 50%,transparent 50%);background-position:calc(100% - 18px) 55%,calc(100% - 12px) 55%;background-size:6px 6px;background-repeat:no-repeat;padding-right:36px}
+select:focus,textarea:focus,input:focus{border-color:var(--gold2);box-shadow:0 0 0 3px rgba(227,184,76,.15)}
+textarea{resize:vertical;min-height:84px;line-height:1.6}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:420px){.row2{grid-template-columns:1fr}}
+.field{margin-bottom:12px}
+.field:last-child{margin-bottom:0}
+
+.item{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;padding:12px 0;border-bottom:1px dashed var(--line2)}
+.item:last-child{border-bottom:0;padding-bottom:0}
+.item:first-of-type{padding-top:4px}
+.item b{display:block;font-size:1rem}
+.item b em{font-style:normal;font-family:var(--latin);color:var(--gold2);margin-left:6px;font-size:.9rem}
+.item small{color:var(--muted);font-size:.78rem;line-height:1.5;display:block}
+.stepper{display:flex;align-items:center;gap:6px}
+.stepper button{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:rgba(20,28,76,.95);color:var(--gold1);font-size:1.35rem;font-weight:900;line-height:1}
+.stepper button:active{transform:scale(.94)}
+.stepper output{min-width:40px;text-align:center;font-family:var(--latin);font-weight:900;font-size:1.5rem}
+
+.chain{margin-top:10px;padding:12px;border-radius:14px;background:rgba(5,7,26,.6);border:1px solid var(--line2)}
+.chain-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;font-size:.84rem;color:var(--gold1);font-weight:700}
+.links{display:flex;flex-direction:column;gap:6px}
+.link{display:grid;grid-template-columns:30px 1fr;gap:8px;align-items:center}
+.link .tag{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-family:var(--latin);font-weight:900;font-size:.85rem;color:var(--gold1);background:radial-gradient(circle at 35% 30%,#3B3F9E,#0C0F33 70%);border:1px solid var(--gold2)}
+.link select{padding:9px 34px 9px 12px;font-size:.98rem}
+.arrow{color:var(--gold3);font-size:.8rem;padding-left:9px;line-height:1}
+.chain-actions{display:flex;gap:8px;margin-top:10px}
+.mini{border:1px solid var(--line);background:transparent;color:var(--gold1);border-radius:9px;padding:6px 12px;font-size:.84rem;font-weight:700}
+.mini.del{color:var(--muted);border-color:rgba(255,255,255,.12);margin-left:auto}
+.addchain{width:100%;margin-top:10px;padding:12px;border-radius:12px;border:1px dashed var(--gold3);background:transparent;color:var(--gold1);font-weight:700}
+.msg{margin:8px 0 0;padding:0;list-style:none;font-size:.82rem}
+.msg li{color:var(--warn);padding-left:16px;position:relative;margin-top:2px}
+.msg li::before{content:"!";position:absolute;left:0;top:3px;width:12px;height:12px;border-radius:50%;background:var(--warn);color:#1d1404;font-size:.62rem;font-weight:900;display:grid;place-items:center;line-height:1}
+.msg li.ok{color:var(--ok)}
+.msg li.ok::before{content:"✓";background:var(--ok)}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 6px 4px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(5,7,26,.6);font-size:.9rem}
+.chip button{border:0;background:rgba(255,255,255,.08);width:22px;height:22px;border-radius:50%;color:var(--muted);line-height:1}
+
+.result{position:relative;margin-top:14px;padding:18px 16px;border-radius:18px;border:1px solid rgba(251,230,160,.55);background:radial-gradient(120% 70% at 50% 0%,rgba(227,184,76,.16),transparent 60%),rgba(10,15,46,.95);box-shadow:0 0 30px rgba(227,184,76,.12)}
+.score{display:flex;align-items:baseline;justify-content:center;gap:8px}
+.score .big{font-family:var(--latin);font-weight:900;font-size:3.6rem;line-height:1}
+.score span{color:var(--muted)}
+.fx{text-align:center;color:var(--muted);font-size:.84rem;margin-top:4px}
+.fx b{color:var(--gold1)}
+pre{margin:14px 0 0;white-space:pre-wrap;word-break:break-word;font-family:var(--sans);font-size:.88rem;line-height:1.7;background:#060920;border:1px solid var(--line2);border-radius:12px;padding:12px 14px;color:#DDD8EA;max-height:none}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:14px;padding:14px 10px;font-weight:900;font-size:1rem;letter-spacing:.04em;text-decoration:none;
+  background:linear-gradient(180deg,var(--gold0),var(--gold2) 50%,var(--gold3));color:#1d1404;box-shadow:0 8px 22px rgba(227,184,76,.22)}
+.btn.line{background:var(--line-green);color:#fff;box-shadow:0 8px 22px rgba(6,199,85,.22)}
+.btn[aria-disabled="true"]{opacity:.4;pointer-events:none;box-shadow:none}
+.note{margin:12px 0 0;color:var(--muted);font-size:.8rem;text-align:center}
+.note b{color:var(--gold1)}
+.blocker{margin-top:12px;text-align:center;color:var(--warn);font-size:.88rem;font-weight:700}
+
+footer{padding:36px 0 44px;text-align:center;color:var(--muted);font-size:.78rem}
+footer a{color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:22px;z-index:50;transform:translate(-50%,24px);opacity:0;transition:.25s;pointer-events:none;background:#141C4C;border:1px solid var(--gold2);color:var(--gold1);padding:10px 18px;border-radius:999px;font-size:.9rem;max-width:calc(100% - 32px);text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap"><b class="gold">大信鍊金術師</b><a href="index.html">← 看排行榜</a></div>
+</header>
+
+<main class="wrap">
+  <div class="intro">
+    <div class="latin">Weekly Report</div>
+    <h1 class="gold">填寫本週回報</h1>
+    <p>選姓名、按數字，自動產生回報格式，複製貼到 LINE 就完成。</p>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-tab="weekly">⭐ 週積分回報</button>
+    <button role="tab" aria-selected="false" data-tab="story">📜 引薦故事</button>
+  </div>
+
+  <!-- ═════ 週積分回報 ═════ -->
+  <section class="view" id="view-weekly">
+    <div class="card">
+      <h2><span class="no">1</span>你是誰</h2>
+      <p class="sub">選一次之後，這支手機下次會記得。</p>
+      <div class="row2">
+        <div class="field"><label class="f" for="wName">姓名</label><select id="wName"></select></div>
+        <div class="field"><label class="f" for="wWeek">回報週次</label><select id="wWeek"></select></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="no">2</span>本週成績</h2>
+      <p class="sub">沒有就是 0，按 ＋ ／ − 調整。</p>
+      <div id="steppers"></div>
+    </div>
+
+    <div class="card">
+      <h2><span class="no">3</span>服務鏈爆擊<span class="gold" style="font-family:var(--latin);margin-left:auto">+5／條</span></h2>
+      <p class="sub">同一位客戶在會員之間接力 3 人以上、最後一棒成交，鏈上每個人各 +5。依接力順序選會員，要包含你自己。沒有就跳過。</p>
+      <div id="chains"></div>
+      <button type="button" class="addchain" id="addChain">＋ 新增一條服務鏈</button>
+    </div>
+
+    <div class="result" aria-live="polite">
+      <div class="score"><b class="big gold" id="wTotal">0</b><span>分</span></div>
+      <div class="fx" id="wFx"></div>
+      <pre id="wOut"></pre>
+      <div class="blocker" id="wBlock" hidden></div>
+      <div class="actions">
+        <button type="button" class="btn" id="wCopy">複製回報</button>
+        <a class="btn line" id="wLine" href="#" target="_blank" rel="noopener">分享到 LINE</a>
+      </div>
+      <p class="note">複製後貼到 <b>商務大群</b>，回覆協調員的回報訊息即可。</p>
+    </div>
+  </section>
+
+  <!-- ═════ 引薦故事 ═════ -->
+  <section class="view" id="view-story" hidden>
+    <div class="card">
+      <h2><span class="no">1</span>誰引薦給誰</h2>
+      <div class="row2">
+        <div class="field"><label class="f" for="sFrom">引薦人</label><select id="sFrom"></select></div>
+        <div class="field"><label class="f" for="sTo">被引薦</label><select id="sTo"></select></div>
+      </div>
+      <div class="field">
+        <label class="f" for="sCo">合作會員（服務鏈上的其他人，可加多位）</label>
+        <select id="sCo"></select>
+        <div class="chips" id="sChips"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="no">2</span>故事內容</h2>
+      <div class="field"><label class="f" for="sScene">引薦情境／客戶需求</label><textarea id="sScene" placeholder="例如：客戶新居要做全室水電，預算有限，希望一次處理到好"></textarea></div>
+      <div class="field"><label class="f" for="sDock">如何對接</label><textarea id="sDock" placeholder="例如：先約客戶看現場，了解需求後介紹給韋翔"></textarea></div>
+      <div class="field"><label class="f" for="sResult">最後結果</label><textarea id="sResult" placeholder="例如：順利成交，客戶又延伸介紹給志安"></textarea></div>
+    </div>
+
+    <div class="result" aria-live="polite">
+      <div class="score"><span>參與會員各</span><b class="big gold">+5</b><span>分</span></div>
+      <div class="fx" id="sFx"></div>
+      <pre id="sOut"></pre>
+      <div class="blocker" id="sBlock" hidden></div>
+      <div class="actions">
+        <button type="button" class="btn" id="sCopy">複製故事</button>
+        <a class="btn line" id="sLine" href="#" target="_blank" rel="noopener">分享到 LINE</a>
+      </div>
+      <p class="note">PO 到 <b>商務大群</b>後，請在 LINE 裡用 <b>@</b> 再標註一次合作會員，對方才會收到通知。故事分以群組貼文為計分依據。</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div>大信鍊金術師：黃金矩陣計畫　·　活動期間 11/9～12/18</div>
+  <div style="margin-top:4px">大信醫美業｜美之耀美醫診所｜陳韋翔 協助製作</div>
+</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/bni-core.js"></script>
+<script>
+(function () {
+  'use strict';
+  var C = window.BNICore;
+  var ROSTER = C.ROSTER;
+  var LS = 'bni-alchemist-me';
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  var toastT;
+  function toast(m) { var t = $('toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(function () { t.classList.remove('show'); }, 2400); }
+  function remember(k, v) { try { if (v) localStorage.setItem(k, v); } catch (e) {} }
+  function recall(k) { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } }
+
+  // 依組別分組的會員選單
+  function memberOptions(placeholder, selected) {
+    var h = '<option value="">' + placeholder + '</option>';
+    ROSTER.forEach(function (g) {
+      h += '<optgroup label="' + g.group + '">' + g.members.map(function (n) {
+        return '<option value="' + n + '"' + (n === selected ? ' selected' : '') + '>' + n + '</option>';
+      }).join('') + '</optgroup>';
+    });
+    return h;
+  }
+
+  /* ── 分頁 ── */
+  document.querySelectorAll('[data-tab]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('[data-tab]').forEach(function (x) { x.setAttribute('aria-selected', String(x === b)); });
+      $('view-weekly').hidden = b.dataset.tab !== 'weekly';
+      $('view-story').hidden = b.dataset.tab !== 'story';
+    });
+  });
+
+  /* ═════ 週積分回報 ═════ */
+  var me = recall(LS);
+  var state = { counts: { ref: 0, close: 0, story: 0 }, chains: [] };
+  $('wName').innerHTML = memberOptions('— 請選擇 —', me);
+  var thisWeek = C.weekOfDate(new Date());
+  $('wWeek').innerHTML = C.WEEKS.map(function (w) {
+    return '<option value="' + w.label + '"' + (w.label === thisWeek ? ' selected' : '') + '>' + w.label + (w.label === thisWeek ? '（本週）' : '') + '</option>';
+  }).join('');
+
+  var ITEMS = [
+    { key: 'ref', label: '外部引薦', pts: 1, unit: '件', desc: '給出有效的外部引薦張數' },
+    { key: 'close', label: '引薦成功成交', pts: 5, unit: '件', desc: '你給出的引薦，本週成交的件數（引薦人拿分）' },
+    { key: 'story', label: '完成引薦故事', pts: 5, unit: '篇', desc: '已 PO 商務大群、你有參與的故事篇數（可到「引薦故事」分頁產生格式）' }
+  ];
+  $('steppers').innerHTML = ITEMS.map(function (it) {
+    return '<div class="item"><div><b>' + it.label + '<em>+' + it.pts + '／' + it.unit + '</em></b><small>' + it.desc + '</small></div>' +
+      '<div class="stepper"><button type="button" data-k="' + it.key + '" data-d="-1" aria-label="' + it.label + '減一">−</button>' +
+      '<output id="o-' + it.key + '">0</output>' +
+      '<button type="button" data-k="' + it.key + '" data-d="1" aria-label="' + it.label + '加一">＋</button></div></div>';
+  }).join('');
+  $('steppers').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-k]'); if (!b) return;
+    var k = b.dataset.k;
+    state.counts[k] = Math.max(0, Math.min(99, state.counts[k] + parseInt(b.dataset.d, 10)));
+    $('o-' + k).textContent = state.counts[k];
+    renderWeekly();
+  });
+
+  /* 服務鏈 */
+  var LETTERS = 'ABCDEFGH';
+  function renderChains() {
+    $('chains').innerHTML = state.chains.map(function (ch, ci) {
+      var links = ch.map(function (n, li) {
+        return (li ? '<div class="arrow">↓</div>' : '') +
+          '<div class="link"><span class="tag">' + LETTERS[li] + '</span><select data-c="' + ci + '" data-l="' + li + '" aria-label="第 ' + (ci + 1) + ' 條服務鏈第 ' + (li + 1) + ' 棒">' + memberOptions(li === 0 ? '— 第一棒（源頭）—' : '— 第 ' + (li + 1) + ' 棒 —', n) + '</select></div>';
+      }).join('');
+      return '<div class="chain"><div class="chain-h"><span>服務鏈 ' + (ci + 1) + '</span></div><div class="links">' + links + '</div>' +
+        '<ul class="msg" id="cm' + ci + '"></ul>' +
+        '<div class="chain-actions">' + (ch.length < LETTERS.length ? '<button type="button" class="mini" data-act="more" data-c="' + ci + '">＋ 再加一棒</button>' : '') +
+        (ch.length > 3 ? '<button type="button" class="mini" data-act="less" data-c="' + ci + '">− 少一棒</button>' : '') +
+        '<button type="button" class="mini del" data-act="del" data-c="' + ci + '">移除這條</button></div></div>';
+    }).join('');
+    $('addChain').textContent = state.chains.length ? '＋ 再新增一條服務鏈' : '＋ 新增一條服務鏈';
+  }
+  $('addChain').addEventListener('click', function () {
+    var name = $('wName').value;
+    state.chains.push(['', '', '']);
+    renderChains(); renderWeekly();
+    var sel = $('chains').querySelectorAll('.chain:last-child select')[0];
+    if (sel && !name) sel.focus();
+  });
+  $('chains').addEventListener('change', function (e) {
+    var s = e.target; if (s.dataset.c == null) return;
+    state.chains[+s.dataset.c][+s.dataset.l] = s.value;
+    renderWeekly();
+  });
+  $('chains').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-act]'); if (!b) return;
+    var ci = +b.dataset.c;
+    if (b.dataset.act === 'more') state.chains[ci].push('');
+    if (b.dataset.act === 'less') state.chains[ci].pop();
+    if (b.dataset.act === 'del') state.chains.splice(ci, 1);
+    renderChains(); renderWeekly();
+  });
+
+  function chainProblems(ch, name) {
+    var p = [], filled = ch.filter(Boolean);
+    if (filled.length < ch.length) p.push('還有空白的棒次沒選');
+    var seen = {};
+    filled.forEach(function (n) { if (seen[n]) p.push(n + ' 重複出現'); seen[n] = 1; });
+    if (name && filled.length === ch.length && filled.indexOf(name) < 0) p.push('服務鏈裡要包含你自己（' + name + '）');
+    return p;
+  }
+
+  function renderWeekly() {
+    var name = $('wName').value, week = $('wWeek').value;
+    var blockers = [];
+    if (!name) blockers.push('請先選你的姓名');
+    state.chains.forEach(function (ch, ci) {
+      var p = chainProblems(ch, name);
+      var el = $('cm' + ci);
+      if (el) el.innerHTML = p.length ? p.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') : '<li class="ok">這條服務鏈 OK</li>';
+      if (p.length) blockers.push('服務鏈 ' + (ci + 1) + ' 還沒完成');
+    });
+    var counts = { ref: state.counts.ref, close: state.counts.close, story: state.counts.story, chain: state.chains.length };
+    var total = C.computeTotal(counts);
+    $('wTotal').textContent = total;
+    $('wFx').innerHTML = '引薦 ' + counts.ref + '×1 ＋ 成交 ' + counts.close + '×5 ＋ 故事 ' + counts.story + '×5 ＋ 爆擊 ' + counts.chain + '×5 ＝ <b>' + total + ' 分</b>';
+    var text = C.fillWeekly({ week: week, name: name || '＿＿＿＿', counts: state.counts, chains: state.chains });
+    $('wOut').textContent = text;
+    var ok = !blockers.length;
+    $('wBlock').hidden = ok; $('wBlock').textContent = blockers.join('、');
+    $('wCopy').setAttribute('aria-disabled', String(!ok));
+    $('wLine').setAttribute('aria-disabled', String(!ok));
+    $('wLine').href = ok ? 'https://line.me/R/share?text=' + encodeURIComponent(text) : '#';
+  }
+  $('wName').addEventListener('change', function () { remember(LS, this.value); renderWeekly(); });
+  $('wWeek').addEventListener('change', renderWeekly);
+
+  /* ═════ 引薦故事 ═════ */
+  var co = [];
+  $('sFrom').innerHTML = memberOptions('— 請選擇 —', me);
+  $('sTo').innerHTML = memberOptions('— 請選擇 —', '');
+  $('sCo').innerHTML = memberOptions('＋ 加入合作會員（沒有可略過）', '');
+  $('sCo').addEventListener('change', function () {
+    var v = this.value;
+    if (v && co.indexOf(v) < 0) co.push(v);
+    this.value = ''; renderStory();
+  });
+  $('sChips').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-n]'); if (!b) return;
+    co = co.filter(function (n) { return n !== b.dataset.n; }); renderStory();
+  });
+  function renderStory() {
+    var from = $('sFrom').value, to = $('sTo').value;
+    var collab = co.filter(function (n) { return n !== from && n !== to; });
+    $('sChips').innerHTML = collab.map(function (n) { return '<span class="chip">' + esc(n) + '<button type="button" data-n="' + esc(n) + '" aria-label="移除 ' + esc(n) + '">×</button></span>'; }).join('');
+    var parts = [from, to].filter(Boolean).concat(collab);
+    $('sFx').textContent = parts.length ? '參與會員：' + parts.join('、') : '';
+    var blockers = [];
+    if (!from) blockers.push('選引薦人');
+    if (!to) blockers.push('選被引薦');
+    if (from && to && from === to) blockers.push('引薦人和被引薦不能是同一人');
+    if (!$('sScene').value.trim()) blockers.push('寫引薦情境');
+    if (!$('sDock').value.trim()) blockers.push('寫如何對接');
+    if (!$('sResult').value.trim()) blockers.push('寫最後結果');
+    var text = C.fillStory({ referrer: from || '＿＿', referee: to || '＿＿', collaborators: collab, scenario: $('sScene').value, docking: $('sDock').value, result: $('sResult').value });
+    $('sOut').textContent = text;
+    var ok = !blockers.length;
+    $('sBlock').hidden = ok; $('sBlock').textContent = '還差：' + blockers.join('、');
+    $('sCopy').setAttribute('aria-disabled', String(!ok));
+    $('sLine').setAttribute('aria-disabled', String(!ok));
+    $('sLine').href = ok ? 'https://line.me/R/share?text=' + encodeURIComponent(text) : '#';
+  }
+  ['sFrom', 'sTo'].forEach(function (id) { $(id).addEventListener('change', renderStory); });
+  ['sScene', 'sDock', 'sResult'].forEach(function (id) { $(id).addEventListener('input', renderStory); });
+
+  /* ── 複製 ── */
+  function copy(id, msg) {
+    var el = $(id), text = el.textContent;
+    (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(function () { toast(msg); })
+      .catch(function () { var r = document.createRange(); r.selectNodeContents(el); var s = getSelection(); s.removeAllRanges(); s.addRange(r); toast('請長按反白的文字複製'); });
+  }
+  $('wCopy').addEventListener('click', function () { copy('wOut', '已複製！到 LINE 商務大群貼上'); });
+  $('sCopy').addEventListener('click', function () { copy('sOut', '已複製！PO 到商務大群並 @ 合作會員'); });
+
+  renderChains(); renderWeekly(); renderStory();
+})();
+</script>
+</body>
+</html>

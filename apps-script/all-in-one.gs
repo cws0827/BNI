@@ -679,6 +679,43 @@
     ].join('\n');
   }
 
+  // 會員填寫頁：把填好的數字組成和範本一模一樣的回報文字
+  function fillWeekly(d) {
+    var c = d.counts || {};
+    var chains = (d.chains || []).filter(function (ch) { return ch && ch.length; });
+    var n = function (k) { return parseInt(c[k], 10) || 0; };
+    var total = computeTotal({ ref: n('ref'), close: n('close'), story: n('story'), chain: chains.length });
+    return [
+      '【大信鍊金術師｜' + d.week + '積分回報】',
+      '',
+      '姓名：' + d.name,
+      '',
+      '💟本週外部引薦（+1／件）：' + n('ref') + '件',
+      '',
+      '💟本週引薦成功成交（+5／件｜引薦會員拿分）：' + n('close') + '件',
+      '',
+      '💟本週完成引薦故事（參與會員各 +5／篇）：' + n('story') + '篇',
+      '📌 引薦故事須 Po 商務大群組，並標註合作會員，以群組貼文為計分依據',
+      '',
+      '本週服務鏈3人以上完成服務爆擊分（參與會員各 +5／條）：' + chains.length + '條',
+      '',
+      '🔆如有三人以上服務鏈爆擊（請列出會員名字）'
+    ].concat(chains.length ? chains.map(function (ch) { return ch.join(' → '); }) : ['無']).concat([
+      '',
+      '⭐ 本週個人積分合計：' + total + '分'
+    ]).join('\n');
+  }
+
+  function fillStory(d) {
+    var collab = (d.collaborators || []).filter(Boolean);
+    return [
+      '引薦人：' + d.referrer + '｜被引薦：' + d.referee + (collab.length ? '（' + collab.map(function (x) { return '@' + x; }).join(' ') + '）' : ''),
+      '引薦情境／客戶需求：' + String(d.scenario || '').trim(),
+      '如何對接：' + String(d.docking || '').trim(),
+      '最後結果：' + String(d.result || '').trim()
+    ].join('\n');
+  }
+
   function battleReport(week, lb, topN) {
     topN = topN || 5;
     var medal = ['🥇', '🥈', '🥉', '④', '⑤', '⑥', '⑦', '⑧', '⑨', '⑩'];
@@ -702,7 +739,8 @@
     splitBlocks: splitBlocks, parseText: parseText,
     prepareWeekly: prepareWeekly, prepareStory: prepareStory,
     planSubmission: planSubmission, leaderboard: leaderboard, weekCheck: weekCheck,
-    weeklyTemplate: weeklyTemplate, storyTemplate: storyTemplate, battleReport: battleReport
+    weeklyTemplate: weeklyTemplate, storyTemplate: storyTemplate, battleReport: battleReport,
+    fillWeekly: fillWeekly, fillStory: fillStory
   };
 });
 

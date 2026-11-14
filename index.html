@@ -69,7 +69,9 @@ section{padding:72px 0;position:relative}
 .nav nav::-webkit-scrollbar{display:none}
 .nav nav a{color:var(--muted);text-decoration:none;font-size:.86rem;padding:6px 10px;border-radius:8px;white-space:nowrap}
 .nav nav a:hover{color:var(--gold1)}
-@media (max-width:620px){.nav .brand{display:none}.nav nav{margin:0 auto}}
+.nav nav a.navfill{color:var(--gold1);font-weight:700}
+@media (max-width:620px){.nav .brand{display:none}.nav nav{margin:0 auto}.nav nav a{padding:6px 7px;font-size:.84rem}}
+@media (max-width:380px){.nav nav a{padding:6px 5px;font-size:.8rem}}
 
 /* ── hero ── */
 .hero{padding:40px 0 30px;overflow:hidden}
@@ -250,6 +252,13 @@ section{padding:72px 0;position:relative}
 .result .hint{margin-top:12px;font-size:.88rem;font-weight:700;color:var(--gold1);min-height:1.6em}
 
 /* ── report ── */
+.fillcta{display:flex;align-items:center;gap:14px;margin:0 0 18px;padding:18px;border-radius:18px;text-decoration:none;color:var(--paper);
+  border:1px solid rgba(251,230,160,.6);background:radial-gradient(120% 120% at 0% 0%,rgba(227,184,76,.2),transparent 60%),rgba(14,20,56,.9);box-shadow:0 0 30px rgba(227,184,76,.14)}
+.fillcta .ic{font-size:1.8rem}
+.fillcta b{display:block;font-family:var(--serif);font-weight:900;font-size:1.12rem;letter-spacing:.04em}
+.fillcta small{color:var(--muted);font-size:.84rem;line-height:1.5;display:block;margin-top:2px}
+.fillcta .go{margin-left:auto;font-size:1.4rem;color:var(--gold1)}
+.fs p a{color:var(--gold1)}
 .flowsteps{display:grid;gap:12px;margin-bottom:22px}
 @media (min-width:820px){.flowsteps{grid-template-columns:repeat(3,1fr)}}
 .fs{padding:18px;border-radius:16px;background:rgba(14,20,56,.85);border:1px solid var(--line)}
@@ -292,7 +301,7 @@ footer .credit i{font-style:normal;color:var(--gold3);margin:0 .2em}
   <div class="wrap">
     <a class="brand gold" href="#top">大信鍊金術師</a>
     <nav aria-label="頁面導覽">
-      <a href="#board">排行榜</a><a href="#rules">積分規則</a><a href="#cases">案例</a><a href="#calc">試算</a><a href="#report">怎麼回報</a>
+      <a href="#board">排行榜</a><a href="#rules">積分規則</a><a href="#cases">案例</a><a href="#calc">試算</a><a href="#report">怎麼回報</a><a href="fill.html" class="navfill">✍️ 填寫</a>
     </nav>
   </div>
 </header>
@@ -317,8 +326,8 @@ footer .credit i{font-style:normal;color:var(--gold3);margin:0 .2em}
           <div class="u"><b class="gold" id="cs">--</b><small>秒</small></div>
         </div>
         <div class="cta">
-          <a class="btn" href="#board">看即時排行榜</a>
-          <a class="btn ghost" href="#rules">積分規則</a>
+          <a class="btn" href="fill.html">✍️ 填寫本週回報</a>
+          <a class="btn ghost" href="#board">看即時排行榜</a>
         </div>
       </div>
 
@@ -513,10 +522,15 @@ footer .credit i{font-style:normal;color:var(--gold3);margin:0 .2em}
       <h2 class="gold">每週怎麼回報</h2>
       <p>照格式回報，協調員彙整後排行榜就會更新。</p>
     </div>
+    <a class="fillcta" href="fill.html">
+      <span class="ic">✍️</span>
+      <span><b class="gold">用填寫頁產生回報，最不會出錯</b><small>選姓名、按數字、選服務鏈會員，自動算分並產生格式，複製或一鍵分享到 LINE</small></span>
+      <span class="go">→</span>
+    </a>
     <div class="flowsteps">
       <div class="fs"><div class="no gold">01</div><h3>協調員發出回報範本</h3><p>每週協調員會在商務大群貼出當週的積分回報範本。</p></div>
-      <div class="fs"><div class="no gold">02</div><h3>照範本回覆本週數字</h3><p>四個項目都要填，沒有就填 0。有服務鏈爆擊的話，請把會員名字依順序列出來。</p></div>
-      <div class="fs"><div class="no gold">03</div><h3>引薦故事 PO 大群</h3><p>用標準格式 PO 在商務大群並標註合作會員，故事分以群組貼文為計分依據。</p></div>
+      <div class="fs"><div class="no gold">02</div><h3>用填寫頁產生回報</h3><p>打開<a href="fill.html">填寫頁</a>選姓名、按數字，複製後貼到大群回覆。也可以直接複製下面的範本自己填，沒有的項目填 0。</p></div>
+      <div class="fs"><div class="no gold">03</div><h3>引薦故事 PO 大群</h3><p>填寫頁的「引薦故事」分頁可以產生標準格式。PO 在商務大群並 @ 標註合作會員，故事分以群組貼文為計分依據。</p></div>
     </div>
     <div class="tpls">
       <div class="tpl"><div class="h"><h3>每週積分回報範本</h3><button class="btn sm" type="button" data-copy="tWeekly">複製</button></div><pre id="tWeekly"></pre></div>
