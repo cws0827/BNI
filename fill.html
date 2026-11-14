@@ -165,7 +165,7 @@ footer a{color:var(--muted)}
         <button type="button" class="btn" id="wCopy">複製回報</button>
         <a class="btn line" id="wLine" href="#" target="_blank" rel="noopener">分享到 LINE</a>
       </div>
-      <p class="note">複製後貼到 <b>商務大群</b>，回覆協調員的回報訊息即可。</p>
+      <p class="note">複製後貼到 <b>行政小組群</b>，回覆協調員的回報訊息即可。</p>
     </div>
   </section>
 
@@ -398,7 +398,7 @@ footer a{color:var(--muted)}
     (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(function () { toast(msg); })
       .catch(function () { var r = document.createRange(); r.selectNodeContents(el); var s = getSelection(); s.removeAllRanges(); s.addRange(r); toast('請長按反白的文字複製'); });
   }
-  $('wCopy').addEventListener('click', function () { copy('wOut', '已複製！到 LINE 商務大群貼上'); });
+  $('wCopy').addEventListener('click', function () { copy('wOut', '已複製！到 LINE 行政小組群貼上'); });
   $('sCopy').addEventListener('click', function () { copy('sOut', '已複製！PO 到商務大群並 @ 合作會員'); });
 
   renderChains(); renderWeekly(); renderStory();
