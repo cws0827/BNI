@@ -149,7 +149,7 @@ footer a{color:var(--muted)}
 
     <div class="card">
       <h2><span class="no">3</span>服務鏈爆擊<span class="gold" style="font-family:var(--latin);margin-left:auto">+5／條</span></h2>
-      <p class="sub">同一位客戶在會員之間接力 3 人以上、最後一棒成交，鏈上每個人各 +5。依接力順序選會員，要包含你自己。沒有就跳過。</p>
+      <p class="sub">同一位客戶在會員之間接力 3 人以上、最後一棒成交，鏈上每個人各 +5。依接力順序選會員，<b style="color:var(--gold1)">第一棒預設是你</b>；如果你是第二、三棒，把 A 改成源頭的會員就好。沒有就跳過。</p>
       <div id="chains"></div>
       <button type="button" class="addchain" id="addChain">＋ 新增一條服務鏈</button>
     </div>
@@ -289,10 +289,11 @@ footer a{color:var(--muted)}
   }
   $('addChain').addEventListener('click', function () {
     var name = $('wName').value;
-    state.chains.push(['', '', '']);
+    state.chains.push([name, '', '']);   // 第一棒預設是自己，可以改
     renderChains(); renderWeekly();
-    var sel = $('chains').querySelectorAll('.chain:last-child select')[0];
-    if (sel && !name) sel.focus();
+    var sels = $('chains').querySelectorAll('.chain:last-child select');
+    var focus = name ? sels[1] : sels[0];
+    if (focus) focus.focus();
   });
   $('chains').addEventListener('change', function (e) {
     var s = e.target; if (s.dataset.c == null) return;
@@ -339,7 +340,14 @@ footer a{color:var(--muted)}
     $('wLine').setAttribute('aria-disabled', String(!ok));
     $('wLine').href = ok ? 'https://line.me/R/share?text=' + encodeURIComponent(text) : '#';
   }
-  $('wName').addEventListener('change', function () { remember(LS, this.value); renderWeekly(); });
+  var lastName = $('wName').value;
+  $('wName').addEventListener('change', function () {
+    var name = this.value;
+    // 第一棒還是舊名字或空白的，跟著換成新選的姓名（手動改過的不動）
+    state.chains.forEach(function (ch) { if (!ch[0] || ch[0] === lastName) ch[0] = name; });
+    lastName = name;
+    remember(LS, name); renderChains(); renderWeekly();
+  });
   $('wWeek').addEventListener('change', renderWeekly);
 
   /* ═════ 引薦故事 ═════ */
