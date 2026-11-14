@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<title>大信鍊金術師｜說明影片封面</title>
+<!-- 影片封面：540×960（以 2 倍輸出成 1080×1920 的 cover.png）。重點內容放在畫面中段，LINE 縮圖裁切時也看得到。 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@700;900&display=block" rel="stylesheet">
+<style>
+
+:root{
+  --night:#05071A; --gold0:#FFF7DA; --gold1:#FBE6A0; --gold2:#E3B84C; --gold3:#A9761D; --gold4:#6E4A10;
+  --paper:#EEE9DF; --muted:#A6A5C2; --line:rgba(227,184,76,.3);
+  --serif:"Noto Serif TC",serif; --sans:"Noto Sans TC",sans-serif; --latin:"Cinzel","Noto Serif TC",serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:540px;height:960px;overflow:hidden;background:var(--night)}
+body{font-family:var(--sans);color:var(--paper);-webkit-font-smoothing:antialiased}
+#stage{position:relative;width:540px;height:960px;overflow:hidden;
+  background:radial-gradient(120% 60% at 50% -5%,#1E2A7A 0%,transparent 58%),radial-gradient(80% 50% at 100% 70%,rgba(122,63,200,.22),transparent 60%),radial-gradient(70% 45% at 0% 90%,rgba(47,85,200,.2),transparent 60%),var(--night)}
+#stars{position:absolute;inset:0;opacity:.6;background-image:radial-gradient(1px 1px at 20px 30px,#fff,transparent),radial-gradient(1px 1px at 120px 80px,#FBE6A0,transparent),radial-gradient(1.5px 1.5px at 200px 160px,#fff,transparent),radial-gradient(1px 1px at 60px 210px,#cfd8ff,transparent),radial-gradient(1px 1px at 260px 40px,#fff,transparent),radial-gradient(1.2px 1.2px at 170px 260px,#FBE6A0,transparent);background-size:300px 300px}
+.gold{background:linear-gradient(178deg,var(--gold0) 0%,var(--gold1) 28%,var(--gold2) 52%,var(--gold4) 80%,var(--gold2) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.scene{position:absolute;inset:0}
+.abs{position:absolute;left:0;right:0}
+.center{text-align:center}
+
+
+#brand{position:absolute;top:24px;left:0;right:0;text-align:center;font-family:var(--serif);font-weight:900;font-size:15px;letter-spacing:.24em}
+.badge{position:absolute;top:66px;left:0;right:0;text-align:center}
+.badge span{display:inline-block;padding:7px 18px;border-radius:999px;font-weight:900;font-size:17px;letter-spacing:.12em;color:#1d1404;background:linear-gradient(180deg,var(--gold0),var(--gold2));box-shadow:0 6px 24px rgba(227,184,76,.35)}
+.sigil{position:absolute;left:50%;top:112px;width:300px;height:300px;margin-left:-150px}
+.title{position:absolute;top:404px;left:0;right:0;text-align:center}
+.title h1{margin:0;font-family:var(--serif);font-weight:900;font-size:62px;letter-spacing:.04em;line-height:1.1;filter:drop-shadow(0 4px 0 rgba(0,0,0,.6)) drop-shadow(0 0 26px rgba(227,184,76,.3))}
+.plaque{display:inline-block;margin-top:10px;padding:3px 22px;border-top:1px solid var(--gold2);border-bottom:1px solid var(--gold2);font-family:var(--serif);font-weight:900;font-size:28px;letter-spacing:.3em;text-indent:.3em}
+.hook{position:absolute;top:572px;left:26px;right:26px;padding:18px 10px 16px;border-radius:22px;text-align:center;
+  background:radial-gradient(120% 140% at 50% 0%,rgba(227,184,76,.2),transparent 60%),rgba(10,14,44,.92);border:1.5px solid rgba(251,230,160,.6);box-shadow:0 0 40px rgba(227,184,76,.18)}
+.hook .q{font-family:var(--serif);font-weight:900;font-size:44px;line-height:1.25;letter-spacing:.04em;color:#fff}
+.hook .q em{font-style:normal}
+.hook .s{margin-top:8px;font-size:20px;font-weight:700;color:var(--gold1);letter-spacing:.12em}
+.chips{position:absolute;top:772px;left:22px;right:22px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.chip{border-radius:14px;border:1px solid var(--line);background:rgba(14,20,56,.9);text-align:center;padding:8px 0 7px}
+.chip b{display:block;font-family:var(--latin);font-weight:900;font-size:26px;line-height:1.1}
+.chip span{font-size:14px;font-weight:700;color:var(--paper);letter-spacing:.1em}
+.prize{position:absolute;top:862px;left:0;right:0;text-align:center;font-size:19px;font-weight:900;letter-spacing:.06em}
+.prize b{font-family:var(--latin);font-size:24px}
+.prize i{font-style:normal;color:var(--muted);font-weight:700;margin:0 .5em}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="stars"></div>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <linearGradient id="gGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF7DA"/><stop offset=".45" stop-color="#E3B84C"/><stop offset="1" stop-color="#8A5F16"/></linearGradient>
+    <linearGradient id="gViolet" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F1E4FF"/><stop offset=".5" stop-color="#A46BFF"/><stop offset="1" stop-color="#4A1C96"/></linearGradient>
+    <radialGradient id="orbFill" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#4B4FC4"/><stop offset=".55" stop-color="#16195A"/><stop offset="1" stop-color="#07081F"/></radialGradient>
+    <radialGradient id="core" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFF7DA"/><stop offset=".35" stop-color="#E3B84C" stop-opacity=".85"/><stop offset="1" stop-color="#E3B84C" stop-opacity="0"/></radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs></svg>
+  <div id="brand" class="gold">BNI 台南・大信白金分會</div>
+  <div class="badge"><span>▶ 1 分 48 秒看懂</span></div>
+  <svg class="sigil" viewBox="0 0 400 400">
+      <circle cx="200" cy="200" r="120" fill="url(#core)" opacity=".35"/>
+      <g class="rot" data-rot="12" fill="none" stroke="#E3B84C">
+        <circle cx="200" cy="200" r="186" stroke-opacity=".55" stroke-width="1.2"/>
+        <circle cx="200" cy="200" r="176" stroke-opacity=".35" stroke-dasharray="2 7"/>
+        <g stroke-opacity=".6" class="ticks"></g>
+      </g>
+      <g class="rot" data-rot="-18" fill="none" stroke="#E3B84C" stroke-opacity=".35"><circle cx="200" cy="200" r="128"/><path d="M200 72 310.9 264 89.1 264Z M200 328 89.1 136 310.9 136Z"/></g>
+      <g filter="url(#glow)" stroke="#FBE6A0" stroke-width="3" fill="none"><path d="M200 74 L86 272 L314 272 Z"/><path d="M200 74 L200 272" stroke-opacity=".55"/></g>
+      <g transform="translate(200 214)"><path d="M0 -34 30 -17 30 17 0 34 -30 17 -30 -17Z" fill="#1A1E5C" stroke="#E3B84C" stroke-width="2"/><circle r="9" fill="url(#core)"/></g>
+      <g font-family="Cinzel,serif" font-weight="900" font-size="38" text-anchor="middle">
+        <circle cx="200" cy="74" r="40" fill="url(#orbFill)" stroke="#E3B84C" stroke-width="3"/><text x="200" y="88" fill="url(#gGold)">A</text>
+        <circle cx="86" cy="272" r="40" fill="url(#orbFill)" stroke="#E3B84C" stroke-width="3"/><text x="86" y="286" fill="url(#gGold)">B</text>
+        <circle cx="314" cy="272" r="40" fill="url(#orbFill)" stroke="#E3B84C" stroke-width="3"/><text x="314" y="286" fill="url(#gGold)">C</text>
+      </g>
+    </svg>
+  <div class="title">
+    <h1 class="gold">大信鍊金術師</h1>
+    <div class="plaque"><span class="gold">黃金矩陣計畫</span></div>
+  </div>
+  <div class="hook">
+    <div class="q"><em class="gold">怎麼拿分？</em><br>每週怎麼回報？</div>
+    <div class="s">規則＋填寫教學，一支影片搞定</div>
+  </div>
+  <div class="chips">
+    <div class="chip"><b class="gold">+1</b><span>引薦</span></div>
+    <div class="chip"><b class="gold">+5</b><span>成交</span></div>
+    <div class="chip"><b class="gold">+5</b><span>故事</span></div>
+    <div class="chip"><b class="gold">+5</b><span>爆擊</span></div>
+  </div>
+  <div class="prize">🏆 個人第一名 <b class="gold">$1,000</b><i>｜</i><span class="gold">11/9 ～ 12/18</span></div>
+</div>
+<script>
+// 法陣刻度（同 explainer.html）
+document.querySelectorAll('.ticks').forEach(function (g) {
+  var s = '';
+  for (var i = 0; i < 72; i++) {
+    var a = i * 5 * Math.PI / 180, r2 = i % 6 ? 181 : 172;
+    s += '<line x1="' + (200 + 186 * Math.cos(a)) + '" y1="' + (200 + 186 * Math.sin(a)) + '" x2="' + (200 + r2 * Math.cos(a)) + '" y2="' + (200 + r2 * Math.sin(a)) + '"/>';
+  }
+  g.innerHTML = s;
+});
+</script>
+</body>
+</html>
