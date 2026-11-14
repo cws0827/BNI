@@ -79,12 +79,14 @@ textarea{resize:vertical;min-height:84px;line-height:1.6}
 .arrow{color:var(--gold3);font-size:.8rem;padding-left:9px;line-height:1}
 .chain-actions{display:flex;gap:8px;margin-top:10px}
 .mini{border:1px solid var(--line);background:transparent;color:var(--gold1);border-radius:9px;padding:6px 12px;font-size:.84rem;font-weight:700}
-.mini.del{color:var(--muted);border-color:rgba(255,255,255,.12);margin-left:auto}
+.mini.del{color:#F3B3B3;border-color:rgba(240,120,120,.35);margin-left:auto}
 .addchain{width:100%;margin-top:10px;padding:12px;border-radius:12px;border:1px dashed var(--gold3);background:transparent;color:var(--gold1);font-weight:700}
 .msg{margin:8px 0 0;padding:0;list-style:none;font-size:.82rem}
 .msg li{color:var(--warn);padding-left:16px;position:relative;margin-top:2px}
 .msg li::before{content:"!";position:absolute;left:0;top:3px;width:12px;height:12px;border-radius:50%;background:var(--warn);color:#1d1404;font-size:.62rem;font-weight:900;display:grid;place-items:center;line-height:1}
 .msg li.ok{color:var(--ok)}
+.msg li.hint{color:var(--muted)}
+.msg li.hint::before{content:"i";background:var(--muted)}
 .msg li.ok::before{content:"✓";background:var(--ok)}
 
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
@@ -283,7 +285,7 @@ footer a{color:var(--muted)}
         '<ul class="msg" id="cm' + ci + '"></ul>' +
         '<div class="chain-actions">' + (ch.length < LETTERS.length ? '<button type="button" class="mini" data-act="more" data-c="' + ci + '">＋ 再加一棒</button>' : '') +
         (ch.length > 3 ? '<button type="button" class="mini" data-act="less" data-c="' + ci + '">− 少一棒</button>' : '') +
-        '<button type="button" class="mini del" data-act="del" data-c="' + ci + '">移除這條</button></div></div>';
+        '<button type="button" class="mini del" data-act="del" data-c="' + ci + '">✕ 不需要，移除這條</button></div></div>';
     }).join('');
     $('addChain').textContent = state.chains.length ? '＋ 再新增一條服務鏈' : '＋ 新增一條服務鏈';
   }
@@ -325,8 +327,10 @@ footer a{color:var(--muted)}
     state.chains.forEach(function (ch, ci) {
       var p = chainProblems(ch, name);
       var el = $('cm' + ci);
-      if (el) el.innerHTML = p.length ? p.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') : '<li class="ok">這條服務鏈 OK</li>';
-      if (p.length) blockers.push('服務鏈 ' + (ci + 1) + ' 還沒完成');
+      if (el) el.innerHTML = p.length
+        ? p.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '<li class="hint">不小心按到的？按右下角「✕ 不需要，移除這條」就好</li>'
+        : '<li class="ok">這條服務鏈 OK</li>';
+      if (p.length) blockers.push('服務鏈 ' + (ci + 1) + ' 還沒選完（不需要的話請按「✕ 不需要，移除這條」）');
     });
     var counts = { ref: state.counts.ref, close: state.counts.close, story: state.counts.story, chain: state.chains.length };
     var total = C.computeTotal(counts);
