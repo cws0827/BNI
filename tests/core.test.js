@@ -194,9 +194,9 @@ test('同一則回報同一項出現兩次、數字不同，會提醒', () => {
   assert.ok(r.parseNotes.some(n => n.includes('出現兩次')));
 });
 
-test('正式名單：46 人、9 組，綽號對得上海報上的人', () => {
+test('正式名單：47 人、9 組，綽號對得上海報上的人', () => {
   const R = C.rosterMembers();
-  assert.equal(R.length, 46);
+  assert.equal(R.length, 47);
   assert.equal(new Set(R.map(m => m.group)).size, 9);
   const all = R.flatMap(m => [m.name, ...m.aliases]);
   assert.equal(new Set(all).size, all.length, '名字或綽號有重複');
@@ -206,6 +206,8 @@ test('正式名單：46 人、9 組，綽號對得上海報上的人', () => {
   assert.equal(n('志安'), '許志安');
   assert.equal(n('小姜'), '姜則旭');
   assert.equal(n('mia'), '黃氏英');
+  assert.equal(n('志青'), '胡志青');
+  assert.equal(R.find(m => m.name === '胡志青').group, '第四組');
   assert.equal(R.find(m => m.name === '林佳欣').role, '組長');
   assert.equal(R.find(m => m.name === '黃氏英').role, '培訓長');
   const [r] = C.parseText(FILLED, { members: R });
@@ -220,7 +222,7 @@ test('一鍵部署檔和原始碼同步（沒同步請執行 node tools/build-gs
   assert.equal(fs.readFileSync(OUT, 'utf8'), build());
 });
 
-test('一鍵部署檔在 Apps Script 環境能載入，setup 會寫入 46 位會員', () => {
+test('一鍵部署檔在 Apps Script 環境能載入，setup 會寫入 47 位會員', () => {
   const fs = require('fs');
   const vm = require('vm');
   const { OUT } = require('../tools/build-gs.js');
@@ -252,7 +254,7 @@ test('一鍵部署檔在 Apps Script 環境能載入，setup 會寫入 46 位會
   vm.createContext(ctx);
   vm.runInContext(fs.readFileSync(OUT, 'utf8'), ctx);
   ctx.setup();
-  assert.equal(sheets['會員名單'].rows.length, 47);
+  assert.equal(sheets['會員名單'].rows.length, 48);
   const code = sheets['協調員'].rows[1][1];
   // 登入、送出、讀排行榜，走一遍完整流程
   ctx.doPost({ postData: { contents: JSON.stringify({ action: 'login', code }) } });
